@@ -3,6 +3,8 @@ import { Inter } from "next/font/google";
 import { Bucket } from "sst/node/bucket";
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
 import { S3Client, PutObjectCommand } from "@aws-sdk/client-s3";
+import { useState } from "react";
+import { FileUpload } from "@/components/FileUpload";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -18,30 +20,37 @@ export async function getServerSideProps() {
 }
 
 export default function Home({ url }: { url: string }) {
-  return (
-    <main>
-      <form
-        onSubmit={async (e) => {
-          e.preventDefault();
+  const useFancy = true;
+  const [downloadUrl, setDownloadUrl] = useState<string | null>(null);
 
-          const file = (e.target as HTMLFormElement).file.files?.[0]!;
+  if (!useFancy) {
+    return (
+      <main>
+        <form
+          onSubmit={async (e) => {
+            e.preventDefault();
 
-          const image = await fetch(url, {
-            body: file,
-            method: "PUT",
-            headers: {
-              "Content-Type": file.type,
-              "Content-Disposition": `attachment; filename="${file.name}"`,
-            },
-          });
+            const file = (e.target as HTMLFormElement).file.files?.[0]!;
 
-          window.location.href = image.url.split("?")[0];
-          alert(image.url.split("?")[0]);
-        }}
-      >
-        <input name="file" type="file" accept="image/png, image/jpeg" />
-        <button type="submit">Upload</button>
-      </form>
-    </main>
-  );
+            const image = await fetch(url, {
+              body: file,
+              method: "PUT",
+              headers: {
+                "Content-Type": file.type,
+                "Content-Disposition": `attachment; filename="${file.name}"`,
+              },
+            });
+
+            window.location.href = image.url.split("?")[0];
+            setDownloadUrl(image.url.split("?")[0]);
+          }}
+        >
+          <input name="file" type="file" accept="image/png, image/jpeg" />
+          <button type="submit">Upload</button>
+          {downloadUrl && downloadUrl}
+        </form>
+      </main>
+    );
+  }
+  return <FileUpload />;
 }
