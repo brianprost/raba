@@ -72,6 +72,10 @@ export default function Home({ url }: { url: string }) {
       headers: {
         "Content-Type": file.type,
         "Content-Disposition": `attachment; filename="${file.name}"`,
+        "Sender-Email": data.senderEmail,
+        "Recipient-Email": data.recipientEmail,
+        "File-Title": data.title,
+        "File-Description": data.description,
       },
     });
 
@@ -82,7 +86,10 @@ export default function Home({ url }: { url: string }) {
     <>
       <Head>
         <title>Raba - Secure File Transfer</title>
-        <meta name="description" content="HumRRO's secure file transfer service." />
+        <meta
+          name="description"
+          content="HumRRO's secure file transfer service."
+        />
         <link rel="icon" href="/raba-logo.png" />
       </Head>
       <div {...getRootProps()} className="hero min-h-screen bg-base-200">
@@ -90,7 +97,7 @@ export default function Home({ url }: { url: string }) {
           <div className="text-center lg:text-left lg:pl-10">
             <div className="flex items-end gap-3">
               {/* <Image src="/../public/raba-logo.png" alt="raba-logo" width={150} height={150} /> */}
-              <h1 className="text-8xl font-bold">Raba</h1>
+              <h1 className="text-8xl font-bold drop-shadow-md">Raba</h1>
             </div>
             <p className="py-6 text-xl">
               {
