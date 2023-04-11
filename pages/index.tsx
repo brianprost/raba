@@ -1,14 +1,12 @@
 import crypto from "crypto";
-import { Inter } from "next/font/google";
 import { Bucket } from "sst/node/bucket";
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
 import { S3Client, PutObjectCommand } from "@aws-sdk/client-s3";
 import { useCallback, useState } from "react";
-import { FileUpload } from "@/components/FileUpload";
 import { useForm } from "react-hook-form";
 import { DropzoneRootProps, useDropzone } from "react-dropzone";
-
-const inter = Inter({ subsets: ["latin"] });
+import Head from "next/head";
+import Image from "next/image";
 
 type FormData = {
   senderEmail: string;
@@ -82,11 +80,19 @@ export default function Home({ url }: { url: string }) {
 
   return (
     <>
+      <Head>
+        <title>Raba - Secure File Transfer</title>
+        <meta name="description" content="HumRRO's secure file transfer service." />
+        <link rel="icon" href="/raba-logo.png" />
+      </Head>
       <div {...getRootProps()} className="hero min-h-screen bg-base-200">
         <div className="hero-content flex-col lg:flex-row-reverse">
           <div className="text-center lg:text-left lg:pl-10">
-            <h1 className="text-8xl font-bold font-mono">Raba</h1>
-            <p className="py-6">
+            <div className="flex items-end gap-3">
+              {/* <Image src="/../public/raba-logo.png" alt="raba-logo" width={150} height={150} /> */}
+              <h1 className="text-8xl font-bold">Raba</h1>
+            </div>
+            <p className="py-6 text-xl">
               {
                 "Meet Raba, HumRRO's new file sharing service. Raba is a secure portal for sharing files between HumRRO staff and clients. Raba is hosted on HumRRO's AWS infrastructure and is designed to be highly available and secure."
               }
@@ -174,8 +180,8 @@ export default function Home({ url }: { url: string }) {
                 </div>
               </form>
               {downloadUrl && (
-                <div className="font-mono border border-humrroForestGreen rounded-lg py-4">
-                  <h5 className="text-center text-humrroForestGreen underline underline-offset-4 font-bold mb-4">
+                <div className="border border-humrroForestGreen rounded-lg py-4">
+                  <h5 className="text-xl text-center text-humrroForestGreen underline underline-offset-4 font-bold mb-4">
                     {"Your file's link:"}
                   </h5>
                   <div
@@ -191,7 +197,7 @@ export default function Home({ url }: { url: string }) {
                       }, 5000);
                     }}
                   >
-                    <p className="text-center text-xs cursor-pointer flex justify-center items-center flex-col">
+                    <p className="text-center text-sm cursor-pointer flex justify-center items-center flex-col">
                       {downloadUrl ?? "https://humrro.org"}
                     </p>
                   </div>
