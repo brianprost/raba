@@ -21,7 +21,7 @@ export default {
         job: {
           function: {
             bind: [bucket],
-            handler: "function/delete.handler",
+            handler: "functions/delete.handler",
           },
         },
       })
