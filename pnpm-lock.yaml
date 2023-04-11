@@ -7,9 +7,6 @@ dependencies:
   '@aws-sdk/s3-request-presigner':
     specifier: ^3.310.0
     version: 3.310.0
-  '@fontsource/space-grotesk':
-    specifier: ^4.5.13
-    version: 4.5.13
   '@next/font':
     specifier: ^13.3.0
     version: 13.3.0
@@ -2493,10 +2490,6 @@ packages:
   /@eslint/js@8.38.0:
     resolution: {integrity: sha512-IoD2MfUnOV58ghIHCiil01PcohxjbYR/qCxsoC+xNgUwh1EY8jOOrYmu3d3a71+tJJ23uscEV4X2HJWMsPJu4g==}
     engines: {node: ^12.22.0 || ^14.17.0 || >=16.0.0}
-    dev: false
-
-  /@fontsource/space-grotesk@4.5.13:
-    resolution: {integrity: sha512-HYjs3C/ME3N55+9la5FGH3NebpBqyCP03DJzDLYlQ/fpnYOoQcEEoojtMyqDr8kBlQtrB6FSoa3vy84Wh0ZFqw==}
     dev: false
 
   /@httptoolkit/websocket-stream@6.0.1:
