@@ -51,6 +51,10 @@ export default function Home({ url }: { url: string }) {
     maxSize: 2 * 1024 * 1024 * 1024, // 2GB
   });
 
+  const [tooltipText, setTooltipText] = useState<string | null>(
+    "🔗 Click to copy to clipboard"
+  );
+
   const onSubmit = async (data: FormData) => {
     if (!file) {
       alert("Please upload a file.");
@@ -77,83 +81,126 @@ export default function Home({ url }: { url: string }) {
   };
 
   return (
-    <div
-      {...getRootProps()}
-      className="min-h-screen bg-gray-100 flex items-center justify-center p-6 font-sans"
-    >
-      {isDragActive && (
-        <div className="absolute inset-0 bg-humrroForestGreen bg-opacity-70 flex items-center justify-center text-white text-7xl">
-          Drop to upload...
-        </div>
-      )}
-      <form
-        onSubmit={handleSubmit(onSubmit)}
-        className="space-y-4 w-96 bg-gray-200 p-10 rounded-lg shadow-md"
-      >
-        <h1 className="text-center text-4xl text-humrroForestGreen">RABA</h1>
-        <div className="p-4 border border-humrroLimeGreen rounded-lg">
-          <p className="my-2 text-center">
-            Drag and drop a file here to upload
-          </p>
-          <input {...getInputProps()} />
-          {file && <p className="text-sm text-humrroBlue">{file.name}</p>}
-        </div>
-        <input
-          {...register("senderEmail", { required: true })}
-          className="w-full p-4 border border-gray-300 rounded-lg"
-          type="email"
-          placeholder="Your Email"
-        />
-        {errors.senderEmail && (
-          <span className="text-humrroOrange">Sender email is required.</span>
-        )}
-        <input
-          {...register("recipientEmail", { required: true })}
-          className="w-full p-4 border border-gray-300 rounded-lg"
-          type="email"
-          placeholder="Recipient's Email"
-        />
-        {errors.recipientEmail && (
-          <span className="text-humrroOrange">
-            Recipient email is required.
-          </span>
-        )}
-
-        <input
-          {...register("title", { required: true })}
-          className="w-full p-4 border border-gray-300 rounded-lg"
-          type="text"
-          placeholder="Title"
-        />
-        {errors.title && (
-          <span className="text-humrroOrange">Title is required.</span>
-        )}
-
-        <textarea
-          {...register("description", { required: true })}
-          className="w-full p-4 border border-gray-300 rounded-lg"
-          placeholder="Description"
-          rows={3}
-        />
-        {errors.description && (
-          <span className="text-humrroOrange">Description is required.</span>
-        )}
-
-        <button
-          type="submit"
-          className="w-full bg-humrroBlue text-white py-2 hover:bg-humrroNavy focus:outline-none rounded-lg"
-        >
-          Upload File
-        </button>
-        {downloadUrl && (
-          <div className="w-full p-4 border border-gray-300 rounded-lg font-mono">
-            <h5 className="text-center text-humrroForestGreen underline underline-offset-4 font-bold mb-4">
-              {"Your file's link:"}
-            </h5>
-            <p className="text-sm select-all">{downloadUrl}</p>
+    <>
+      <div {...getRootProps()} className="hero min-h-screen bg-base-200">
+        <div className="hero-content flex-col lg:flex-row-reverse">
+          <div className="text-center lg:text-left lg:pl-10">
+            <h1 className="text-8xl font-bold font-mono">Raba</h1>
+            <p className="py-6">
+              {
+                "Meet Raba, HumRRO's new file sharing service. Raba is a secure portal for sharing files between HumRRO staff and clients. Raba is hosted on HumRRO's AWS infrastructure and is designed to be highly available and secure."
+              }
+            </p>
           </div>
-        )}
-      </form>
-    </div>
+          <div className="card flex-shrink-0 w-full max-w-sm shadow-2xl bg-base-100">
+            {isDragActive && (
+              <div className="absolute inset-0 bg-humrroLimeGreen bg-opacity-70 flex items-center justify-center text-white text-2xl font-sans text-center p-4 rounded-lg">
+                Drop to upload...
+              </div>
+            )}
+            <div className="card-body">
+              <form onSubmit={handleSubmit(onSubmit)} className="form-control">
+                <div className="p-4 border border-humrroLimeGreen rounded-lg">
+                  <p className="my-2 text-center">
+                    Drag and drop a file here to upload
+                  </p>
+                  <input {...getInputProps()} />
+                  {file && (
+                    <p className="text-sm text-humrroBlue">{file.name}</p>
+                  )}
+                </div>
+                <div className="divider px-20 pt-4 pb-1" />
+                <label htmlFor="senderEmail" className="label">
+                  <span className="label-text">Your Email</span>
+                </label>
+                <input
+                  {...register("senderEmail", { required: true })}
+                  className="input input-bordered"
+                  type="email"
+                  placeholder="Your Email"
+                />
+                {errors.senderEmail && (
+                  <span className="text-humrroOrange">
+                    Sender email is required.
+                  </span>
+                )}
+                <label htmlFor="recipientEmail" className="label mt-2">
+                  <span className="label-text">{"Recipient's Email"}</span>
+                </label>
+                <input
+                  {...register("recipientEmail", { required: true })}
+                  className="input input-bordered"
+                  type="email"
+                  placeholder="Recipient's Email"
+                />
+                {errors.recipientEmail && (
+                  <span className="text-humrroOrange">
+                    Recipient email is required.
+                  </span>
+                )}
+
+                <label htmlFor="title" className="label mt-2">
+                  <span className="label-text">Title</span>
+                </label>
+                <input
+                  {...register("title", { required: true })}
+                  className="input input-bordered"
+                  type="text"
+                  placeholder="Title"
+                />
+                {errors.title && (
+                  <span className="text-humrroOrange">Title is required.</span>
+                )}
+                <label htmlFor="description" className="label mt-2">
+                  <span className="label-text">Description</span>
+                </label>
+
+                <textarea
+                  {...register("description", { required: true })}
+                  className="textarea textarea-bordered"
+                  placeholder="Description"
+                  rows={3}
+                />
+                {errors.description && (
+                  <span className="text-humrroOrange">
+                    Description is required.
+                  </span>
+                )}
+
+                <div className="form-control my-6">
+                  <button type="submit" className="btn btn-primary">
+                    Upload File
+                  </button>
+                </div>
+              </form>
+              {downloadUrl && (
+                <div className="font-mono border border-humrroForestGreen rounded-lg py-4">
+                  <h5 className="text-center text-humrroForestGreen underline underline-offset-4 font-bold mb-4">
+                    {"Your file's link:"}
+                  </h5>
+                  <div
+                    className="tooltip tooltip-bottom flex"
+                    data-tip={tooltipText}
+                    onClick={() => {
+                      navigator.clipboard.writeText(
+                        downloadUrl ?? "https://humrro.org"
+                      );
+                      setTooltipText("✅ Copied!");
+                      setTimeout(() => {
+                        setTooltipText("🔗 Click to copy to clipboard");
+                      }, 5000);
+                    }}
+                  >
+                    <p className="text-center text-xs cursor-pointer flex justify-center items-center flex-col">
+                      {downloadUrl ?? "https://humrro.org"}
+                    </p>
+                  </div>
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+      </div>
+    </>
   );
 }
