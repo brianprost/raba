@@ -181,7 +181,11 @@ export default function Home({ url }: { url: string }) {
                 )}
 
                 <div className="form-control my-6">
-                  <button type="submit" className="btn btn-primary">
+                  <button
+                    type="submit"
+                    className="btn btn-primary"
+                    // disabled={!file}
+                  >
                     Upload File
                   </button>
                 </div>
@@ -214,6 +218,18 @@ export default function Home({ url }: { url: string }) {
           </div>
         </div>
       </div>
+      {downloadUrl && (
+        <div className="toast toast-top toast-end">
+          <div className="alert alert-success">
+            <div>
+              <span>
+                File was uploaded, but no emails were sent. Ya boi Brian needs a
+                domain for that!
+              </span>
+            </div>
+          </div>
+        </div>
+      )}
     </>
   );
 }
