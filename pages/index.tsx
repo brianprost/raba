@@ -107,19 +107,19 @@ export default function Home({ url }: { url: string }) {
           </div>
           <div className="card flex-shrink-0 w-full max-w-sm shadow-2xl bg-base-100">
             {isDragActive && (
-              <div className="absolute inset-0 bg-humrroLimeGreen bg-opacity-70 flex items-center justify-center text-white text-2xl font-sans text-center p-4 rounded-lg">
+              <div className="absolute inset-0 bg-accent bg-opacity-70 flex items-center justify-center text-white text-2xl font-sans text-center p-4 rounded-lg">
                 Drop to upload...
               </div>
             )}
             <div className="card-body">
               <form onSubmit={handleSubmit(onSubmit)} className="form-control">
-                <div className="p-4 border border-humrroLimeGreen rounded-lg">
-                  <p className="my-2 text-center">
+                <div className="p-4 border border-primary rounded-lg">
+                  <p className="my-2 text-center underline underline-offset-2">
                     Drag and drop a file here to upload
                   </p>
                   <input {...getInputProps()} />
                   {file && (
-                    <p className="text-sm text-humrroBlue">{file.name}</p>
+                    <p className="text-sm text-center">{file.name}</p>
                   )}
                 </div>
                 <div className="divider px-20 pt-4 pb-1" />

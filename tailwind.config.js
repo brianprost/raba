@@ -7,8 +7,7 @@ module.exports = {
   ],
   theme: {
     extend: {
-      fontFamily: {
-      },
+      fontFamily: {},
       backgroundColor: {
         humrroBlue: "#007DB7",
         humrroNavy: "#003E74",
@@ -34,6 +33,23 @@ module.exports = {
         humrroOrange: "#FF8300",
       },
     },
+  },
+  daisyui: {
+    themes: [
+      {
+        2023: {
+          primary: "#5E94C4",
+          secondary: "#D03D45",
+          accent: "#B3A5CE",
+          neutral: "#3D4451",
+          "base-100": "#FFFFFF",
+          info: "#5E94C4",
+          success: "#36D399",
+          warning: "#FBBD23",
+          error: "#F87272",
+        },
+      },
+    ],
   },
   plugins: [require("daisyui")],
 };
