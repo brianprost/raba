@@ -6,7 +6,6 @@ import { useCallback, useState } from "react";
 import { useForm } from "react-hook-form";
 import { DropzoneRootProps, useDropzone } from "react-dropzone";
 import Head from "next/head";
-import Image from "next/image";
 
 type FormData = {
   senderEmail: string;
@@ -27,6 +26,7 @@ export async function getServerSideProps() {
 }
 
 export default function Home({ url }: { url: string }) {
+
   const [file, setFile] = useState<File | null>(null);
   const [downloadUrl, setDownloadUrl] = useState<string | null>(null);
   const {
@@ -92,7 +92,7 @@ export default function Home({ url }: { url: string }) {
         />
         <link rel="icon" href="/raba-logo.png" />
       </Head>
-      <div {...getRootProps()} className="hero min-h-screen bg-base-200">
+      <div {...getRootProps()} className="hero h-full">
         <div className="hero-content flex-col lg:flex-row-reverse">
           <div className="text-center lg:text-left lg:pl-10">
             <div className="flex items-end gap-3">
@@ -118,9 +118,7 @@ export default function Home({ url }: { url: string }) {
                     Drag and drop a file here to upload
                   </p>
                   <input {...getInputProps()} />
-                  {file && (
-                    <p className="text-sm text-center">{file.name}</p>
-                  )}
+                  {file && <p className="text-sm text-center">{file.name}</p>}
                 </div>
                 <div className="divider px-20 pt-4 pb-1" />
                 <label htmlFor="senderEmail" className="label">
