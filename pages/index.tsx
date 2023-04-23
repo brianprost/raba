@@ -6,6 +6,7 @@ import { useCallback, useState } from "react";
 import { useForm } from "react-hook-form";
 import { DropzoneRootProps, useDropzone } from "react-dropzone";
 import Head from "next/head";
+import { useSession, signIn, signOut } from "next-auth/react";
 
 type FormData = {
   senderEmail: string;
@@ -26,6 +27,7 @@ export async function getServerSideProps() {
 }
 
 export default function Home({ url }: { url: string }) {
+  const {data: session, status} = useSession();
 
   const [file, setFile] = useState<File | null>(null);
   const [downloadUrl, setDownloadUrl] = useState<string | null>(null);
@@ -54,6 +56,7 @@ export default function Home({ url }: { url: string }) {
   );
 
   const onSubmit = async (data: FormData) => {
+    
     if (!file) {
       alert("Please upload a file.");
       return;
