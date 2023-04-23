@@ -1,8 +1,6 @@
-import React from "react";
-
 function Login() {
   return (
-    <div className="container mx-auto justify-center items-center w-1/2">
+    <div className="flex flex-col justify-center items-center  h-full">
       <div className="card lg:card-side bg-base-100 shadow-xl">
         <figure>
           <img
@@ -11,11 +9,11 @@ function Login() {
           />
         </figure>
         <div className="card-body">
-          <h2 className="card-title">Sign In</h2>
-          <input type="text" placeholder="Username" className="input input-bordered w-full mb-2" />
+          <h2 className="card-title mb-6">Sign In</h2>
+          <input type="email" id="email" placeholder="Email" className="input input-bordered w-full mb-2" />
           <input type="password" placeholder="Password" className="input input-bordered w-full mb-2" />
           <div className="card-actions justify-end">
-            <button className="btn btn-primary">Listen</button>
+            <button className="btn btn-primary">Sign In</button>
           </div>
         </div>
       </div>
