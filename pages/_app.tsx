@@ -4,8 +4,8 @@ import type { AppProps } from "next/app";
 import { Hanken_Grotesk } from "@next/font/google";
 import Navbar from "@/components/Navbar";
 import { SessionProvider } from "next-auth/react";
-import CognitoProvider from "next-auth/providers/cognito";
 import { NavbarToggles } from "@/components/types/NavbarToggles";
+import { UserProvider } from '@auth0/nextjs-auth0/client';
 // fonts
 const hanken_Grotesk = Hanken_Grotesk({
   subsets: ["latin"],
@@ -18,7 +18,7 @@ export default function App({ Component, pageProps }: AppProps) {
   const [showAccountMenu, setShowAccountMenu] = useState(true);
   
   return (
-    <SessionProvider session={pageProps.session}>
+    <UserProvider>
       <NavbarTogglesContext.Provider
         value={{showTitle, setShowTitle, showAccountMenu, setShowAccountMenu}}
       >
@@ -31,6 +31,6 @@ export default function App({ Component, pageProps }: AppProps) {
           </div>
         </main>
       </NavbarTogglesContext.Provider>
-    </SessionProvider>
+    </UserProvider>
   );
 }
