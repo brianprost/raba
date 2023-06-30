@@ -17,7 +17,6 @@ export default function Navbar() {
     organization: "Flowers",
     avatarUrl: "https://brianprost.com/img/brian-prost-scarecrow.webp",
   });
-  console.log("i'm on tha monorail")
 
   return (
     <div className="navbar h-full px-4">
