@@ -1,10 +1,12 @@
 import { useState } from "react";
 
+import Image from "next/image";
+
 const SignInSignUp = () => {
   return (
     <div className="card lg:card-side bg-base-100 shadow-xl">
       <figure>
-        <img src="/raba-logo.png" alt="raba-logo" />
+        <Image src="/raba-logo.png" alt="raba-logo" width={200} height={200} />
       </figure>
       <div className="card-body">
         <h2 className="card-title mb-6">Sign In</h2>
