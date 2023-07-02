@@ -10,10 +10,10 @@ export default {
   },
   stacks(app) {
     app.stack(function Site({ stack }) {
-      const bucket = new Bucket(stack, "public", {
+      const bucket = new Bucket(stack, "fileUploads", {
         cors: true,
       });
-      const site = new NextjsSite(stack, "site", {
+      const site = new NextjsSite(stack, "ui", {
         bind: [bucket],
       });
       new Cron(stack, "cron", {

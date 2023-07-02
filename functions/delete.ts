@@ -10,7 +10,7 @@ export async function handler() {
 
     const list = await client.send(
         new ListObjectsCommand({
-            Bucket: Bucket.public.bucketName,
+            Bucket: Bucket.fileUploads.bucketName,
         })
     );
 
@@ -19,7 +19,7 @@ export async function handler() {
             client.send(
                 new DeleteObjectCommand({
                     Key: file.Key,
-                    Bucket: Bucket.public.bucketName,
+                    Bucket: Bucket.fileUploads.bucketName,
                 })
             )
         )

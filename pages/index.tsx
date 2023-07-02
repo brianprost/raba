@@ -19,7 +19,7 @@ export async function getServerSideProps() {
   const command = new PutObjectCommand({
     ACL: "public-read",
     Key: crypto.randomUUID(),
-    Bucket: Bucket.public.bucketName,
+    Bucket: Bucket.fileUploads.bucketName,
   });
   const url = await getSignedUrl(new S3Client({}), command);
 
@@ -27,7 +27,7 @@ export async function getServerSideProps() {
 }
 
 export default function Home({ url }: { url: string }) {
-  // const {data: session, status} = useSession();
+  // const {data:  session, status} = useSession();
 
   const [file, setFile] = useState<File | null>(null);
   const [downloadUrl, setDownloadUrl] = useState<string | null>(null);
@@ -37,6 +37,7 @@ export default function Home({ url }: { url: string }) {
     formState: { errors },
   } = useForm<FormData>();
   const [isDragActive, setIsDragActive] = useState(false);
+  const [isUploading, setIsUploading] = useState(false);
 
   const onDrop = useCallback((acceptedFiles: File[]) => {
     setFile(acceptedFiles[0]);
@@ -56,33 +57,36 @@ export default function Home({ url }: { url: string }) {
   );
 
   const onSubmit = async (data: FormData) => {
-    
-    if (!file) {
-      alert("Please upload a file.");
-      return;
-    }
+    setIsUploading(true);
+    try {
+      if (!file) {
+        alert("Please upload a file.");
+        return;
+      }
 
-    const formData = new FormData();
-    formData.append("file", file);
-    formData.append("senderEmail", data.senderEmail);
-    formData.append("recipientEmail", data.recipientEmail);
-    formData.append("title", data.title);
-    formData.append("description", data.description);
+      const formData = new FormData();
+      formData.append("file", file);
+      formData.append("senderEmail", data.senderEmail);
+      formData.append("recipientEmail", data.recipientEmail);
+      formData.append("title", data.title);
+      formData.append("description", data.description);
 
-    const image = await fetch(url, {
-      body: file,
-      method: "PUT",
-      headers: {
-        "Content-Type": file.type,
-        "Content-Disposition": `attachment; filename="${file.name}"`,
-        "Sender-Email": data.senderEmail,
-        "Recipient-Email": data.recipientEmail,
-        "File-Title": data.title,
-        "File-Description": data.description,
-      },
-    });
+      const image = await fetch(url, {
+        body: file,
+        method: "PUT",
+        headers: {
+          "Content-Type": file.type,
+          "Content-Disposition": `attachment; filename="${file.name}"`,
+          "Sender-Email": data.senderEmail,
+          "Recipient-Email": data.recipientEmail,
+          "File-Title": data.title,
+          "File-Description": data.description,
+        },
+      });
 
-    setDownloadUrl(image.url.split("?")[0]);
+      setDownloadUrl(image.url.split("?")[0]);
+    } catch (error) {}
+    setIsUploading(false);
   };
 
   return (
@@ -187,7 +191,13 @@ export default function Home({ url }: { url: string }) {
                     className="btn btn-primary"
                     // disabled={!file}
                   >
-                    Upload File
+                    {isUploading ? (
+                      <>
+                        <i className="loading loading-spinner" /> Uploading...
+                      </>
+                    ) : (
+                      "Upload File"
+                    )}
                   </button>
                 </div>
               </form>

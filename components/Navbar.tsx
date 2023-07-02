@@ -3,10 +3,11 @@ import { User } from "./types/User";
 import Link from "next/link";
 // import { useSession, signIn, signOut } from "next-auth/react";
 import { NavbarTogglesContext } from "@/pages/_app";
-import { useUser } from '@auth0/nextjs-auth0/client';
+import { useUser } from "@auth0/nextjs-auth0/client";
 
 export default function Navbar() {
-  const { showTitle, setShowTitle, showAccountMenu, setShowAccountMenu } = useContext(NavbarTogglesContext);
+  const { showTitle, setShowTitle, showAccountMenu, setShowAccountMenu } =
+    useContext(NavbarTogglesContext);
   // const { data: session, status } = useSession();
   const { user, isLoading } = useUser();
   const [fakeUser] = useState<User>({
@@ -49,20 +50,22 @@ export default function Navbar() {
                     <Link href={`/users/${user?.name}`}>Profile</Link>
                   </li>
                   <li>
-                    <button type="button" onClick={() => 'signOut()'}>
+                    <button type="button" onClick={() => "signOut()"}>
                       Logout
                     </button>
                   </li>
                 </ul>
               </div>
             ) : (
-              <button
-                type="button"
-                onClick={() => 'signIn("cognito")'}
-                className="btn btn-ghost"
-              >
-                Login
-              </button>
+              <Link href="/login">
+                <button
+                  type="button"
+                  onClick={() => 'signIn("cognito")'}
+                  className="btn btn-ghost"
+                >
+                  Login
+                </button>
+              </Link>
             ))}
         </div>
       </div>
