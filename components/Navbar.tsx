@@ -22,7 +22,13 @@ export default function Navbar() {
   return (
     <div className="navbar h-full px-4">
       <div className="flex-1 justify-between">
-        <h1 className="text-4xl font-bold">{showTitle && "Raba"}</h1>
+        <h1 className="text-4xl font-bold">
+          {showTitle && (
+            <>
+              <Link href="/">Raba</Link>
+            </>
+          )}
+        </h1>
         <div className="dropdown dropdown-end">
           {showAccountMenu &&
             (user != null ? (
