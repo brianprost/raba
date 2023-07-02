@@ -24,6 +24,7 @@ const SignInSignUp = () => {
         <div className="card-actions justify-end">
           <button className="btn btn-primary">Sign In</button>
         </div>
+        <hr className="my-8 border-gray-300" />
       </div>
     </div>
   );

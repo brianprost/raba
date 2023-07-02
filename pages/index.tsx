@@ -71,7 +71,7 @@ export default function Home({ url }: { url: string }) {
       formData.append("title", data.title);
       formData.append("description", data.description);
 
-      const image = await fetch(url, {
+      const upload = await fetch(url, {
         body: file,
         method: "PUT",
         headers: {
@@ -84,9 +84,12 @@ export default function Home({ url }: { url: string }) {
         },
       });
 
-      setDownloadUrl(image.url.split("?")[0]);
+      setDownloadUrl(upload.url.split("?")[0]);
     } catch (error) {}
     setIsUploading(false);
+    try {
+      // upload record to db
+    } catch (error) {}
   };
 
   return (
