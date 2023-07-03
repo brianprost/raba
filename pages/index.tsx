@@ -6,13 +6,17 @@ import { useCallback, useState } from "react";
 import { useForm } from "react-hook-form";
 import { DropzoneRootProps, useDropzone } from "react-dropzone";
 import Head from "next/head";
+import { Table } from "sst/node/table";
 // import { useSession, signIn, signOut } from "next-auth/react";
+import { DynamoDBClient, PutItemCommand } from "@aws-sdk/client-dynamodb";
+
 
 type FormData = {
   senderEmail: string;
   recipientEmail: string;
   title: string;
   description: string;
+  chargeCode?: string;
 };
 
 export async function getServerSideProps() {
@@ -88,7 +92,21 @@ export default function Home({ url }: { url: string }) {
     } catch (error) {}
     setIsUploading(false);
     try {
-      // upload record to db
+      const params = {
+        TableName: Table.uploads.tableName,
+        Item: {
+          uploadId: crypto.randomUUID(),
+          senderEmail: data.senderEmail,
+          recipientEmail: data.recipientEmail,
+          title: data.title,
+          description: data.description,
+          chargeCode: data.chargeCode,
+          fileUrl: downloadUrl,
+          createdAt: Date.now(),
+        },
+      };
+      const dynamoDb = new DynamoDBClient({});
+      await dynamoDb.send(new PutItemCommand(params));
     } catch (error) {}
   };
 
