@@ -52,6 +52,7 @@ export default function NavbarAuthenticated({ user }: { user: UserProfile }) {
       <div className="dropdown dropdown-end">
         <label tabIndex={0} className="btn btn-ghost btn-circle avatar">
           <div className="w-10 rounded-full">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
               src={user.picture ?? "raba-logo.png"}
               alt={`profile photo for ${user.nickname}`}
