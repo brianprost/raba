@@ -11,7 +11,7 @@ export default function NavbarAuthenticated({ user }: { user: UserProfile }) {
   ];
   const recentShareLinks = [
     // todo
-  ]
+  ];
 
   return (
     <div className="flex-none">
@@ -69,8 +69,8 @@ export default function NavbarAuthenticated({ user }: { user: UserProfile }) {
             </li>
           ))}
           <li>
-          {/* eslint-disable-next-line @next/next/no-html-link-for-pages */}
-          <a href="/api/auth/logout">Logout</a>
+            {/* eslint-disable-next-line @next/next/no-html-link-for-pages */}
+            <a href="/api/auth/logout">Logout</a>
           </li>
         </ul>
       </div>
