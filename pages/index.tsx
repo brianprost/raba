@@ -6,10 +6,11 @@ import { useCallback, useState } from "react";
 import { useForm } from "react-hook-form";
 import { DropzoneRootProps, useDropzone } from "react-dropzone";
 import Head from "next/head";
+import { useUser } from "@auth0/nextjs-auth0/client";
+import type { User } from "@/components/types/User";
 import { Table } from "sst/node/table";
 // import { useSession, signIn, signOut } from "next-auth/react";
 import { DynamoDBClient, PutItemCommand } from "@aws-sdk/client-dynamodb";
-
 
 type FormData = {
   senderEmail: string;
@@ -31,6 +32,7 @@ export async function getServerSideProps() {
 }
 
 export default function Home({ url }: { url: string }) {
+  const { user, isLoading } = useUser();
   // const {data:  session, status} = useSession();
 
   const [file, setFile] = useState<File | null>(null);
@@ -61,6 +63,7 @@ export default function Home({ url }: { url: string }) {
   );
 
   const onSubmit = async (data: FormData) => {
+    console.log(data);
     setIsUploading(true);
     try {
       if (!file) {
@@ -87,27 +90,16 @@ export default function Home({ url }: { url: string }) {
           "File-Description": data.description,
         },
       });
-
       setDownloadUrl(upload.url.split("?")[0]);
+
+      // const dbWrite = await fetch("/api/recordToDb", {
+      //   method: "POST",
+      //   body: JSON.stringify({
+      //     data,
+      //   }),
+      // });
     } catch (error) {}
     setIsUploading(false);
-    try {
-      const params = {
-        TableName: Table.uploads.tableName,
-        Item: {
-          uploadId: crypto.randomUUID(),
-          senderEmail: data.senderEmail,
-          recipientEmail: data.recipientEmail,
-          title: data.title,
-          description: data.description,
-          chargeCode: data.chargeCode,
-          fileUrl: downloadUrl,
-          createdAt: Date.now(),
-        },
-      };
-      const dynamoDb = new DynamoDBClient({});
-      await dynamoDb.send(new PutItemCommand(params));
-    } catch (error) {}
   };
 
   return (
@@ -157,6 +149,8 @@ export default function Home({ url }: { url: string }) {
                   className="input input-bordered"
                   type="email"
                   placeholder="Your Email"
+                  disabled={!!user?.email}
+                  value={user?.email ?? ""}
                 />
                 {errors.senderEmail && (
                   <span className="text-humrroOrange">
