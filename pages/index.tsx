@@ -35,6 +35,9 @@ export default function Home({ url }: { url: string }) {
   const { user, isLoading } = useUser();
   // const {data:  session, status} = useSession();
 
+  const emailValidation = {
+    required: !user,
+  };
   const [file, setFile] = useState<File | null>(null);
   const [downloadUrl, setDownloadUrl] = useState<string | null>(null);
   const {
@@ -63,6 +66,8 @@ export default function Home({ url }: { url: string }) {
   );
 
   const onSubmit = async (data: FormData) => {
+    // TODO this is hacky
+    user && (data.senderEmail = user.email!);
     console.log(data);
     setIsUploading(true);
     try {
@@ -145,7 +150,9 @@ export default function Home({ url }: { url: string }) {
                   <span className="label-text">Your Email</span>
                 </label>
                 <input
-                  {...register("senderEmail", { required: true })}
+                  {...register("senderEmail", {
+                    required: emailValidation.required,
+                  })}
                   className="input input-bordered"
                   type="email"
                   placeholder="Your Email"

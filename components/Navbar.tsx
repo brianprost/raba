@@ -22,7 +22,7 @@ export default function Navbar() {
   return (
     <div className="navbar">
       <div className="flex-1">
-        <a className="btn btn-ghost normal-case text-xl">Raba</a>
+        <Link href={"/"} className="btn btn-ghost normal-case text-xl">Raba</Link>
       </div>
       {user && !isLoading ? (
         <NavbarAuthenticated user={user} />
