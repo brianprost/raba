@@ -48,8 +48,7 @@ export default {
             handler: "functions/delete.handler",
           },
         },
-      })
-
+      });
 
       stack.addOutputs({
         ApiEndpoint: api.url,
