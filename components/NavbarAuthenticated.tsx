@@ -65,12 +65,13 @@ export default function NavbarAuthenticated({ user }: { user: UserProfile }) {
         >
           {accountDropdownLinks.map((link) => (
             <li key={link.url}>
-              <Link href={"/account"}>{link.title}</Link>
+              <Link href={"/account"} className="py-2 peer-hover:font-extralight hover:font-semibold">{link.title}</Link>
             </li>
           ))}
           <li>
+            {/* this has to be separate because it's not a page we're visiting */}
             {/* eslint-disable-next-line @next/next/no-html-link-for-pages */}
-            <a href="/api/auth/logout">Logout</a>
+            <a href="/api/auth/logout" className="py-2 peer-hover:font-extralight hover:font-semibold">Logout</a>
           </li>
         </ul>
       </div>
