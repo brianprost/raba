@@ -115,6 +115,8 @@ export default function Home({ url }: { url: string }) {
           name="description"
           content="HumRRO's secure file transfer service."
         />
+        <meta property="og:title" content={"Raba - Secure File Transfer"} />
+        <meta property="og:image" content={"raba-logo.png"} />
         <link rel="icon" href="/raba-logo.png" />
       </Head>
       <div {...getRootProps()} className="hero h-full">
