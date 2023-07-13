@@ -1,7 +1,6 @@
 import { useState, useContext } from "react";
 import { User } from "./types/User";
 import Link from "next/link";
-// import { useSession, signIn, signOut } from "next-auth/react";
 import { NavbarTogglesContext } from "@/pages/_app";
 import { useUser } from "@auth0/nextjs-auth0/client";
 import NavbarAuthenticated from "./NavbarAuthenticated";
