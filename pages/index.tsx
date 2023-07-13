@@ -6,20 +6,25 @@ import { useCallback, useState } from "react";
 import { useForm } from "react-hook-form";
 import { DropzoneRootProps, useDropzone } from "react-dropzone";
 import Head from "next/head";
-import Image from "next/image";
+import { useUser } from "@auth0/nextjs-auth0/client";
+import type { User } from "@/components/types/User";
+import { Table } from "sst/node/table";
+// import { useSession, signIn, signOut } from "next-auth/react";
+import { DynamoDBClient, PutItemCommand } from "@aws-sdk/client-dynamodb";
 
 type FormData = {
   senderEmail: string;
   recipientEmail: string;
   title: string;
   description: string;
+  chargeCode?: string;
 };
 
 export async function getServerSideProps() {
   const command = new PutObjectCommand({
     ACL: "public-read",
     Key: crypto.randomUUID(),
-    Bucket: Bucket.public.bucketName,
+    Bucket: Bucket.fileUploads.bucketName,
   });
   const url = await getSignedUrl(new S3Client({}), command);
 
@@ -27,6 +32,9 @@ export async function getServerSideProps() {
 }
 
 export default function Home({ url }: { url: string }) {
+  const { user, isLoading } = useUser();
+  // const {data:  session, status} = useSession();
+
   const [file, setFile] = useState<File | null>(null);
   const [downloadUrl, setDownloadUrl] = useState<string | null>(null);
   const {
@@ -35,6 +43,7 @@ export default function Home({ url }: { url: string }) {
     formState: { errors },
   } = useForm<FormData>();
   const [isDragActive, setIsDragActive] = useState(false);
+  const [isUploading, setIsUploading] = useState(false);
 
   const onDrop = useCallback((acceptedFiles: File[]) => {
     setFile(acceptedFiles[0]);
@@ -54,32 +63,43 @@ export default function Home({ url }: { url: string }) {
   );
 
   const onSubmit = async (data: FormData) => {
-    if (!file) {
-      alert("Please upload a file.");
-      return;
-    }
+    console.log(data);
+    setIsUploading(true);
+    try {
+      if (!file) {
+        alert("Please upload a file.");
+        return;
+      }
 
-    const formData = new FormData();
-    formData.append("file", file);
-    formData.append("senderEmail", data.senderEmail);
-    formData.append("recipientEmail", data.recipientEmail);
-    formData.append("title", data.title);
-    formData.append("description", data.description);
+      const formData = new FormData();
+      formData.append("file", file);
+      formData.append("senderEmail", data.senderEmail);
+      formData.append("recipientEmail", data.recipientEmail);
+      formData.append("title", data.title);
+      formData.append("description", data.description);
 
-    const image = await fetch(url, {
-      body: file,
-      method: "PUT",
-      headers: {
-        "Content-Type": file.type,
-        "Content-Disposition": `attachment; filename="${file.name}"`,
-        "Sender-Email": data.senderEmail,
-        "Recipient-Email": data.recipientEmail,
-        "File-Title": data.title,
-        "File-Description": data.description,
-      },
-    });
+      const upload = await fetch(url, {
+        body: file,
+        method: "PUT",
+        headers: {
+          "Content-Type": file.type,
+          "Content-Disposition": `attachment; filename="${file.name}"`,
+          "Sender-Email": data.senderEmail,
+          "Recipient-Email": data.recipientEmail,
+          "File-Title": data.title,
+          "File-Description": data.description,
+        },
+      });
+      setDownloadUrl(upload.url.split("?")[0]);
 
-    setDownloadUrl(image.url.split("?")[0]);
+      // const dbWrite = await fetch("/api/recordToDb", {
+      //   method: "POST",
+      //   body: JSON.stringify({
+      //     data,
+      //   }),
+      // });
+    } catch (error) {}
+    setIsUploading(false);
   };
 
   return (
@@ -92,7 +112,7 @@ export default function Home({ url }: { url: string }) {
         />
         <link rel="icon" href="/raba-logo.png" />
       </Head>
-      <div {...getRootProps()} className="hero min-h-screen bg-base-200">
+      <div {...getRootProps()} className="hero h-full">
         <div className="hero-content flex-col lg:flex-row-reverse">
           <div className="text-center lg:text-left lg:pl-10">
             <div className="flex items-end gap-3">
@@ -118,9 +138,7 @@ export default function Home({ url }: { url: string }) {
                     Drag and drop a file here to upload
                   </p>
                   <input {...getInputProps()} />
-                  {file && (
-                    <p className="text-sm text-center">{file.name}</p>
-                  )}
+                  {file && <p className="text-sm text-center">{file.name}</p>}
                 </div>
                 <div className="divider px-20 pt-4 pb-1" />
                 <label htmlFor="senderEmail" className="label">
@@ -131,6 +149,8 @@ export default function Home({ url }: { url: string }) {
                   className="input input-bordered"
                   type="email"
                   placeholder="Your Email"
+                  disabled={!!user?.email}
+                  value={user?.email ?? ""}
                 />
                 {errors.senderEmail && (
                   <span className="text-humrroOrange">
@@ -186,7 +206,13 @@ export default function Home({ url }: { url: string }) {
                     className="btn btn-primary"
                     // disabled={!file}
                   >
-                    Upload File
+                    {isUploading ? (
+                      <>
+                        <i className="loading loading-spinner" /> Uploading...
+                      </>
+                    ) : (
+                      "Upload File"
+                    )}
                   </button>
                 </div>
               </form>
