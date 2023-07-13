@@ -48,9 +48,9 @@ export default function NavbarAuthenticated({ user }: { user: UserProfile }) {
           </div>
         </div>
       </div> */}
-      <p className="text-bold">{user.nickname}</p>
       <div className="dropdown dropdown-end">
-        <label tabIndex={0} className="btn btn-ghost btn-circle avatar">
+        <label tabIndex={0} className="btn btn-ghost btn-circle avatar flex flex-row w-full pl-4 pr-1">
+      <p className="text-bold">{user.nickname}</p>
           <div className="w-10 rounded-full">
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
