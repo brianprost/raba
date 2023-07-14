@@ -17,6 +17,9 @@ dependencies:
   '@aws-sdk/client-secrets-manager':
     specifier: ^3.369.0
     version: 3.369.0
+  '@aws-sdk/lib-dynamodb':
+    specifier: ^3.370.0
+    version: 3.370.0(@aws-sdk/client-dynamodb@3.363.0)(@aws-sdk/types@3.369.0)
   '@aws-sdk/s3-request-presigner':
     specifier: ^3.360.0
     version: 3.360.0
@@ -2165,6 +2168,19 @@ packages:
     dependencies:
       tslib: 2.5.0
 
+  /@aws-sdk/lib-dynamodb@3.370.0(@aws-sdk/client-dynamodb@3.363.0)(@aws-sdk/types@3.369.0):
+    resolution: {integrity: sha512-XLfCIUCCx9okIwlBYJONN6YT6znveUOj6c4oQIbFgzATaj+X1+BJvSsvm+P0298CB2+kXYlJ+hDXjeapVJJkFA==}
+    engines: {node: '>=14.0.0'}
+    peerDependencies:
+      '@aws-sdk/client-dynamodb': ^3.0.0
+      '@aws-sdk/types': ^3.0.0
+    dependencies:
+      '@aws-sdk/client-dynamodb': 3.363.0
+      '@aws-sdk/types': 3.369.0
+      '@aws-sdk/util-dynamodb': 3.370.0
+      tslib: 2.5.0
+    dev: false
+
   /@aws-sdk/md5-js@3.357.0:
     resolution: {integrity: sha512-to42sFAL7KgV/X9X40LLfEaNMHMGQL6/7mPMVCL/W2BZf3zw5OTl3lAaNyjXA+gO5Uo4lFEiQKAQVKNbr8b8Nw==}
     dependencies:
@@ -3219,6 +3235,13 @@ packages:
       '@aws-sdk/property-provider': 3.357.0
       '@aws-sdk/types': 3.357.0
       tslib: 2.5.0
+
+  /@aws-sdk/util-dynamodb@3.370.0:
+    resolution: {integrity: sha512-qqCm5avefrBnqXjSmw7g9Rzz3KpYDUlQwMxSQwhjaofXggo8khx/8wbcN9V8XzF1K/4gJCMymxzCkFWWq964HA==}
+    engines: {node: '>=14.0.0'}
+    dependencies:
+      tslib: 2.5.0
+    dev: false
 
   /@aws-sdk/util-endpoints@3.306.0:
     resolution: {integrity: sha512-aPTqU4VGhec8LDhKZrfA3/sBHTYRa0favKEo8aEa/vIZJTNBAFlUhvr5z7peAr8gBOtZZcElzX8PiK3jjn3ILw==}

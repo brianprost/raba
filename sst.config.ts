@@ -13,16 +13,16 @@ export default {
       const bucket = new Bucket(stack, "fileUploads", {
         cors: true,
       });
-      const table = new Table(stack, "uploads", {
+      const table = new Table(stack, "uploadDb", {
         fields: {
           uploadId: "string",
           senderEmail: "string",
           recipientEmail: "string",
           title: "string",
           description: "string",
-          chargeCode: "string",
-          fileUrl: "string",
-          createdAt: "string",
+          // chargeCode: "string",
+          // fileUrl: "string",
+          // createdAt: "string",
         },
         primaryIndex: { partitionKey: "uploadId" },
       });
