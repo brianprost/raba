@@ -11,7 +11,6 @@ import type { User } from "@/components/types/User";
 import { Table } from "sst/node/table";
 // import { useSession, signIn, signOut } from "next-auth/react";
 import { DynamoDBClient, PutItemCommand } from "@aws-sdk/client-dynamodb";
-import Script from "next/script";
 
 type FormData = {
   senderEmail: string;
@@ -63,7 +62,7 @@ export default function Home({ url }: { url: string }) {
   });
 
   const [tooltipText, setTooltipText] = useState<string | null>(
-    "🔗 Click to copy to clipboard",
+    "🔗 Click to copy to clipboard"
   );
 
   const onSubmit = async (data: FormData) => {
@@ -121,14 +120,6 @@ export default function Home({ url }: { url: string }) {
         <link rel="icon" href="/raba-logo.png" />
       </Head>
       <div {...getRootProps()} className="hero h-full">
-        <Script src="https://www.googletagmanager.com/gtag/js?id=G-G96VMLZVX9" />
-        <Script id="google-analytics">
-          {`window.dataLayer = window.dataLayer || [];
-          function gtag(){dataLayer.push(arguments);}
-          gtag('js', new Date());
-
-          gtag('config', 'G-G96VMLZVX9');`}
-        </Script>
         <div className="hero-content flex-col lg:flex-row-reverse">
           <div className="text-center lg:text-left lg:pl-10">
             <div className="flex items-end gap-3">
@@ -244,7 +235,7 @@ export default function Home({ url }: { url: string }) {
                     data-tip={tooltipText}
                     onClick={() => {
                       navigator.clipboard.writeText(
-                        downloadUrl ?? "https://humrro.org",
+                        downloadUrl ?? "https://humrro.org"
                       );
                       setTooltipText("✅ Copied!");
                       setTimeout(() => {

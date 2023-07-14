@@ -6,6 +6,8 @@ import Navbar from "@/components/Navbar";
 // import { SessionProvider } from "next-auth/react";
 import { NavbarToggles } from "@/components/types/NavbarToggles";
 import { UserProvider } from "@auth0/nextjs-auth0/client";
+import { GoogleAnalytics } from "nextjs-google-analytics"
+
 // fonts
 const hanken_Grotesk = Hanken_Grotesk({
   subsets: ["latin"],
@@ -27,6 +29,7 @@ export default function App({ Component, pageProps }: AppProps) {
             <Navbar />
           </div>
           <div className="h-[95vh]">
+            <GoogleAnalytics gaMeasurementId="G-G96VMLZVX9" trackPageViews />
             <Component {...pageProps} />
           </div>
         </main>
