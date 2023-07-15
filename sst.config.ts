@@ -13,7 +13,7 @@ export default {
       const bucket = new Bucket(stack, "fileUploads", {
         cors: true,
       });
-      const table = new Table(stack, "uploadDb", {
+      const table = new Table(stack, "uploadsDb", {
         fields: {
           uploadId: "string",
           senderEmail: "string",

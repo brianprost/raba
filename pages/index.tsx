@@ -68,7 +68,9 @@ export default function Home({ url }: { url: string }) {
   const onSubmit = async (data: FormData) => {
     // TODO this is hacky
     user && (data.senderEmail = user.email!);
-    console.log(data);
+    user && (data.recipientEmail = user?.email ?? "");
+    user && (data.title = file?.name ?? "oh nah");
+    user && (data.description = "it's a file, buddy.");
     setIsUploading(true);
     try {
       if (!file) {
@@ -103,18 +105,16 @@ export default function Home({ url }: { url: string }) {
           .pop()!}`
       );
       const uploadDeets = {
-          id: upload.url.split("?")[0].split("/").pop()!,
-          senderEmail: data.senderEmail,
-          recipientEmail: data.recipientEmail,
-          title: data.title,
-          description: data.description,
+        uploadId: upload.url.split("?")[0].split("/").pop()!,
+        senderEmail: data.senderEmail,
+        recipientEmail: data.recipientEmail,
+        title: data.title,
+        description: data.description,
       };
-      console.log(uploadDeets)
+      console.log(uploadDeets);
       const dbWrite = await fetch("/api/recordToDb", {
         method: "POST",
-        body: JSON.stringify({
-          uploadDeets,
-        }),
+        body: JSON.stringify(uploadDeets),
       });
       console.log(dbWrite);
       dbWrite.json().then((data) => {
@@ -221,6 +221,7 @@ export default function Home({ url }: { url: string }) {
                   className="input input-bordered"
                   type="email"
                   placeholder="Recipient's Email"
+                  value={user?.email ?? ""}
                 />
                 {errors.recipientEmail && (
                   <span className="text-humrroOrange">
@@ -236,6 +237,7 @@ export default function Home({ url }: { url: string }) {
                   className="input input-bordered"
                   type="text"
                   placeholder="Title"
+                  value={file?.name ?? "oh nah"}
                 />
                 {errors.title && (
                   <span className="text-humrroOrange">Title is required.</span>
@@ -249,6 +251,7 @@ export default function Home({ url }: { url: string }) {
                   className="textarea textarea-bordered"
                   placeholder="Description"
                   rows={3}
+                  value={"it's a file, buddy."}
                 />
                 {errors.description && (
                   <span className="text-humrroOrange">

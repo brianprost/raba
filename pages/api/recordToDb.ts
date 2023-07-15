@@ -1,10 +1,10 @@
 import type { NextApiRequest, NextApiResponse } from "next";
-import { DynamoDBClient, PutItemCommand } from "@aws-sdk/client-dynamodb";
-import { DynamoDBDocument, PutCommand } from "@aws-sdk/lib-dynamodb";
+import { DynamoDBClient } from "@aws-sdk/client-dynamodb";
+import { PutCommand } from "@aws-sdk/lib-dynamodb";
 import { Table } from "sst/node/table";
 
-type ReqParams = {
-    id: string;
+type UploadDbRecord = {
+    uploadId: string;
     senderEmail: string;
     recipientEmail: string;
     title: string;
@@ -15,39 +15,26 @@ export default async function handler(
     req: NextApiRequest,
     res: NextApiResponse
 ) {
-    console.log(`hi i ran`)
     try {
-        const uploadDeets = req.body as ReqParams;
-        console.log("params", uploadDeets)
+        const uploadDeets = JSON.parse(req.body) as UploadDbRecord;
+        const params = {
+            TableName: Table.uploadsDb.tableName,
+            Key: {
+                uploadId: uploadDeets.uploadId,
+            },
+            Item: {
+                uploadId: uploadDeets.uploadId,
+                senderEmail: uploadDeets.senderEmail,
+                recipientEmail: uploadDeets.recipientEmail,
+                title: uploadDeets.title,
+                description: uploadDeets.description,
+            },
+        }
         // Create an Amazon DynamoDB service client object.
-        const db = DynamoDBDocument.from(new DynamoDBClient({ region: "us-east-1" }),
-            { marshallOptions: { convertEmptyValues: true, removeUndefinedValues: true } });
+        const db = new DynamoDBClient({ region: "us-east-1" });
         try {
-            const data = await db.send(new PutCommand({
-                TableName: Table.uploadDb.tableName,
-                // Key: { uploadId: uploadDeets.id},
-                // UpdateExpression: "set senderEmail = :senderEmail, recipientEmail = :recipientEmail, title = :title, description = :description",
-                // ExpressionAttributeNames: {
-                //     "#uploadId": "uploadId",
-                //     "#senderEmail": "senderEmail",
-                //     "#recipientEmail": "recipientEmail",
-                //     "#title": "title",
-                //     "#description": "description",
-                // },
-                // ExpressionAttributeValues: {
-                //     ":senderEmail": uploadDeets.senderEmail,
-                //     ":recipientEmail": uploadDeets.recipientEmail,
-                //     ":title": uploadDeets.title,
-                //     ":description": uploadDeets.description,
-                // },
-                Item: {
-                    uploadId: { S: uploadDeets.id },
-                    senderEmail: { S: uploadDeets.senderEmail },
-                    recipientEmail: { S: uploadDeets.recipientEmail },
-                    title: { S: uploadDeets.title },
-                    description: { S: uploadDeets.description },
-                },
-            }));
+            const command = new PutCommand(params);
+            const data = await db.send(command);
             console.log("Success - put", data);
         } catch (err) {
             console.log("Error - put", err);
@@ -57,8 +44,3 @@ export default async function handler(
         res.status(500)
     }
 }
-
-
-
-
-
