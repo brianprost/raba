@@ -68,9 +68,6 @@ export default function Home({ url }: { url: string }) {
   const onSubmit = async (data: FormData) => {
     // TODO this is hacky
     user && (data.senderEmail = user.email!);
-    user && (data.recipientEmail = user?.email ?? "");
-    user && (data.title = file?.name ?? "oh nah");
-    user && (data.description = "it's a file, buddy.");
     setIsUploading(true);
     try {
       if (!file) {
@@ -183,7 +180,6 @@ export default function Home({ url }: { url: string }) {
                   className="input input-bordered"
                   type="email"
                   placeholder="Recipient's Email"
-                  value={user?.email ?? ""}
                 />
                 {errors.recipientEmail && (
                   <span className="text-humrroOrange">
@@ -199,7 +195,6 @@ export default function Home({ url }: { url: string }) {
                   className="input input-bordered"
                   type="text"
                   placeholder="Title"
-                  value={file?.name ?? "oh nah"}
                 />
                 {errors.title && (
                   <span className="text-humrroOrange">Title is required.</span>
@@ -213,7 +208,6 @@ export default function Home({ url }: { url: string }) {
                   className="textarea textarea-bordered"
                   placeholder="Description"
                   rows={3}
-                  value={"it's a file, buddy."}
                 />
                 {errors.description && (
                   <span className="text-humrroOrange">
