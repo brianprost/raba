@@ -13,7 +13,7 @@ export default {
       const bucket = new Bucket(stack, "fileUploads", {
         cors: true,
       });
-      const table = new Table(stack, "uploads", {
+      const table = new Table(stack, "uploadsDb", {
         fields: {
           uploadId: "string",
           senderEmail: "string",
@@ -22,7 +22,7 @@ export default {
           description: "string",
           chargeCode: "string",
           fileUrl: "string",
-          createdAt: "string",
+          // createdAt: "string",
         },
         primaryIndex: { partitionKey: "uploadId" },
       });

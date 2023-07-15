@@ -68,7 +68,6 @@ export default function Home({ url }: { url: string }) {
   const onSubmit = async (data: FormData) => {
     // TODO this is hacky
     user && (data.senderEmail = user.email!);
-    console.log(data);
     setIsUploading(true);
     try {
       if (!file) {
@@ -95,14 +94,21 @@ export default function Home({ url }: { url: string }) {
           "File-Description": data.description,
         },
       });
-      setDownloadUrl(upload.url.split("?")[0]);
 
-      // const dbWrite = await fetch("/api/recordToDb", {
-      //   method: "POST",
-      //   body: JSON.stringify({
-      //     data,
-      //   }),
-      // });
+      const uploadDeets = {
+        uploadId: upload.url.split("?")[0].split("/").pop()!,
+        senderEmail: data.senderEmail,
+        recipientEmail: data.recipientEmail,
+        title: data.title,
+        description: data.description,
+        // chargeCode: data.chargeCode,
+        fileUrl: upload.url.split("?")[0],
+      };
+      const dbWrite = await fetch("/api/recordToDb", {
+        method: "POST",
+        body: JSON.stringify(uploadDeets),
+      });
+      setDownloadUrl(upload.url.split("?")[0]);
     } catch (error) {}
     setIsUploading(false);
   };
