@@ -97,21 +97,16 @@ export default function Home({ url }: { url: string }) {
           "File-Description": data.description,
         },
       });
-      console.log(upload);
-      console.log(
-        `copilot's suggested id is ${upload.url
-          .split("?")[0]
-          .split("/")
-          .pop()!}`
-      );
+
       const uploadDeets = {
         uploadId: upload.url.split("?")[0].split("/").pop()!,
         senderEmail: data.senderEmail,
         recipientEmail: data.recipientEmail,
         title: data.title,
         description: data.description,
+        // chargeCode: data.chargeCode,
+        fileUrl: upload.url.split("?")[0],
       };
-      console.log(uploadDeets);
       const dbWrite = await fetch("/api/recordToDb", {
         method: "POST",
         body: JSON.stringify(uploadDeets),

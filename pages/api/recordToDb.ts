@@ -9,6 +9,8 @@ type UploadDbRecord = {
     recipientEmail: string;
     title: string;
     description: string;
+    chargeCode?: string;
+    fileUrl: string;
 }
 
 export default async function handler(
@@ -28,6 +30,8 @@ export default async function handler(
                 recipientEmail: uploadDeets.recipientEmail,
                 title: uploadDeets.title,
                 description: uploadDeets.description,
+                // chargeCode: uploadDeets.chargeCode,
+                fileUrl: uploadDeets.fileUrl,
             },
         }
 
