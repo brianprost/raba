@@ -116,40 +116,7 @@ export default function Home({ url }: { url: string }) {
         method: "POST",
         body: JSON.stringify(uploadDeets),
       });
-      console.log(dbWrite);
-      dbWrite.json().then((data) => {
-        console.log(data);
-      });
-
-      // const dbUpdate = new PutItemCommand({
-      //   TableName: Table.uploads.tableName,
-      //   Key: {
-      //     id: { S: upload.url.split("?")[0].split("/").pop()! },
-      //   },
-      //   UpdateExpression: "set #s = :s, #r = :r, #t = :t, #d = :d",
-      //   ExpressionAttributeNames: {
-      //     "#s": "senderEmail",
-      //     "#r": "recipientEmail",
-      //     "#t": "title",
-      //     "#d": "description",
-      //   },
-      //   ExpressionAttributeValues: {
-      //     ":s": { S: data.senderEmail },
-      //     ":r": { S: data.recipientEmail },
-      //     ":t": { S: data.title },
-      //     ":d": { S: data.description },
-      //   },
-      // });
-      // await dbUpdate.execute();
-      // })
       setDownloadUrl(upload.url.split("?")[0]);
-
-      // const dbWrite = await fetch("/api/recordToDb", {
-      //   method: "POST",
-      //   body: JSON.stringify({
-      //     data,
-      //   }),
-      // });
     } catch (error) {}
     setIsUploading(false);
   };
