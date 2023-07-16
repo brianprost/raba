@@ -20,8 +20,9 @@ export default async function handler(
     try {
         const uploadDeets = JSON.parse(req.body) as UploadDbRecord;
         const params = {
-            TableName: Table.uploadsDb.tableName,
+            TableName: Table.userUploads.tableName,
             Key: {
+                senderEmail: uploadDeets.senderEmail,
                 uploadId: uploadDeets.uploadId,
             },
             Item: {
