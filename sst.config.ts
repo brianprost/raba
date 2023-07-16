@@ -15,7 +15,7 @@ export default {
       const bucket = new Bucket(stack, "fileUploads", {
         cors: true,
       });
-      const table = new Table(stack, "uploadsDb", {
+      const table = new Table(stack, "userUploads", {
         fields: {
           uploadId: "string",
           senderEmail: "string",
@@ -26,7 +26,7 @@ export default {
           fileUrl: "string",
           // createdAt: "string",
         },
-        primaryIndex: { partitionKey: "uploadId" },
+        primaryIndex: { partitionKey: "senderEmail", sortKey: "uploadId" },
       });
       const api = new Api(stack, "api", {
         defaults: {
