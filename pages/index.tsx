@@ -216,19 +216,32 @@ export default function Home({ url }: { url: string }) {
                 )}
 
                 <div className="form-control my-6">
-                  <button
-                    type="submit"
-                    className="btn btn-primary"
-                    // disabled={!file}
-                  >
-                    {isUploading ? (
-                      <>
-                        <i className="loading loading-spinner" /> Uploading...
-                      </>
-                    ) : (
-                      "Upload File"
-                    )}
-                  </button>
+                  {!downloadUrl ? (
+                    <button
+                      type="submit"
+                      className="btn btn-primary"
+                      // disabled={!file}
+                    >
+                      {isUploading ? (
+                        <>
+                          <i className="loading loading-spinner" /> Uploading...
+                        </>
+                      ) : (
+                        "Upload File"
+                      )}
+                    </button>
+                  ) : (
+                    <button
+                      type="reset"
+                      className="btn btn-accent"
+                      onClick={() => {
+                        // reload the page
+                        window.location.reload();
+                      }}
+                    >
+                      Upload Another File
+                    </button>
+                  )}
                 </div>
               </form>
               {downloadUrl && (
@@ -260,7 +273,7 @@ export default function Home({ url }: { url: string }) {
         </div>
       </div>
       {downloadUrl && (
-        <div className="toast toast-top toast-end">
+        <div className="toast toast-bottom toast-end">
           <div className="alert alert-success">
             <div>
               <span>
