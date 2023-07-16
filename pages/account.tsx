@@ -1,5 +1,8 @@
 import React, { use, useEffect, useState } from "react";
 import { useUser } from "@auth0/nextjs-auth0/client";
+import useSWR from "swr";
+
+const fetcher = (url: string) => fetch(url).then((res) => res.json());
 
 type AccountUploadsFromDb = {
   uploadId: string;
@@ -10,34 +13,39 @@ type AccountUploadsFromDb = {
   fileUrl: string;
 };
 
-export default function AccountPage({
-  uploads,
-}: {
-  uploads: AccountUploadsFromDb[];
-}) {
+export default function AccountPage() {
   const { user, error, isLoading } = useUser();
-  const [accountUploads, setAccountUploads] =
-    useState<AccountUploadsFromDb[]>();
+  // const [accountUploads, setAccountUploads] =
+  //   useState<AccountUploadsFromDb[]>();
 
-  useEffect(() => {
-    const fetchAccountUploads = async () => {
-      const res = await fetch("/api/getAccountUploads", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ senderEmail: await user?.email }),
-        // body: JSON.stringify({ senderEmail: "bprost+zepzom@humrro.org" }),
-      });
-      const uploads = await res.json();
-      return uploads;
-    };
-    fetchAccountUploads().then(setAccountUploads);
-  }, [user?.email]);
+  const {
+    data: uploads,
+    error: uploadsError,
+    isLoading: uploadsIsLoading,
+  } = useSWR(
+    `/api/getAccountUploads${user ? `?senderEmail=${user.email}` : ""}`,
+    fetcher
+  );
+
+  // useEffect(() => {
+  //   const fetchAccountUploads = async () => {
+  //     const res = await fetch("/api/getAccountUploads", {
+  //       method: "POST",
+  //       headers: {
+  //         "Content-Type": "application/json",
+  //       },
+  //       body: JSON.stringify({ senderEmail: await user?.email }),
+  //       // body: JSON.stringify({ senderEmail: "bprost+zepzom@humrro.org" }),
+  //     });
+  //     const uploads = await res.json();
+  //     return uploads;
+  //   };
+  //   fetchAccountUploads().then(setAccountUploads);
+  // }, [user?.email]);
 
   console.log("uploads: ", uploads);
-  if (isLoading) return <div>Loading...</div>;
-  if (error) return <div>{error.message}</div>;
+  if (isLoading || uploadsIsLoading) return <div>Loading...</div>;
+  if (error || uploadsError) return <div>{error?.message}</div>;
 
   return (
     user && (
@@ -52,31 +60,30 @@ export default function AccountPage({
             <p>{user.email}</p>
           </div>
         </div>
-        <p className="text-center mt-24 text-2xl">
-          Eventually you will be able to see all of your uploads here...
-        </p>
-        <div className="overflow-x-auto">
+        <h1 className="font-bold mt-24 text-4xl underline underline-offset-2 mb-12">
+          Your uploads:
+        </h1>
+        <div className="container mx-auto overflow-x-auto">
           <table className="table">
             <thead>
               <tr>
                 <th>Upload Id</th>
-                <th>Sender Email</th>
                 <th>Recipient Email</th>
                 <th>Title</th>
                 <th>Description</th>
-                <th>Charge Code</th>
+                {/* <th>Charge Code</th> */}
                 <th>File Url</th>
               </tr>
             </thead>
             <tbody>
-              {uploads.map((upload) => (
+              {uploads.map((upload: AccountUploadsFromDb) => (
                 <tr key={upload.uploadId}>
                   <td>{upload.uploadId}</td>
                   <td>{upload.recipientEmail}</td>
                   <td>{upload.title}</td>
                   <td>{upload.description}</td>
                   {/* <td>{upload.chargeCode}</td> */}
-                  <td>{upload.fileUrl}</td>
+                  <td><a href={upload.fileUrl} target="_blank" rel="noreferrer">{upload.fileUrl}</a></td>
                 </tr>
               ))}
               {/* <tr>
@@ -93,21 +100,21 @@ export default function AccountPage({
   );
 }
 
-export async function getServerSideProps(context: any) {
-  const user = { email: "bprost+zepzom@humrro.org" };
-  const user = context.req.user;
-  const res = await fetch(`${process.env.AUTH0_BASE_URL}/api/getAccountUploads`, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({ senderEmail: user?.email }),
-    // body: JSON.stringify({ senderEmail: "bprost+zepzom@humrro.org" }),
-  });
-  const uploads = await res.json();
-  return {
-    props: {
-      uploads,
-    },
-  };
-}
+// export async function getServerSideProps(context: any) {
+//   const user = { email: "bprost+zepzom@humrro.org" };
+//   const user = context.req.user;
+//   const res = await fetch(`${process.env.AUTH0_BASE_URL}/api/getAccountUploads`, {
+//     method: "POST",
+//     headers: {
+//       "Content-Type": "application/json",
+//     },
+//     body: JSON.stringify({ senderEmail: user?.email }),
+//     // body: JSON.stringify({ senderEmail: "bprost+zepzom@humrro.org" }),
+//   });
+//   const uploads = await res.json();
+//   return {
+//     props: {
+//       uploads,
+//     },
+//   };
+// }
