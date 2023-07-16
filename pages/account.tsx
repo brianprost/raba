@@ -1,4 +1,4 @@
-import React, { use, useEffect, useState } from "react";
+import React from "react";
 import { useUser } from "@auth0/nextjs-auth0/client";
 import useSWR from "swr";
 
@@ -15,8 +15,6 @@ type AccountUploadsFromDb = {
 
 export default function AccountPage() {
   const { user, error, isLoading } = useUser();
-  // const [accountUploads, setAccountUploads] =
-  //   useState<AccountUploadsFromDb[]>();
 
   const {
     data: uploads,
@@ -27,23 +25,6 @@ export default function AccountPage() {
     fetcher
   );
 
-  // useEffect(() => {
-  //   const fetchAccountUploads = async () => {
-  //     const res = await fetch("/api/getAccountUploads", {
-  //       method: "POST",
-  //       headers: {
-  //         "Content-Type": "application/json",
-  //       },
-  //       body: JSON.stringify({ senderEmail: await user?.email }),
-  //       // body: JSON.stringify({ senderEmail: "bprost+zepzom@humrro.org" }),
-  //     });
-  //     const uploads = await res.json();
-  //     return uploads;
-  //   };
-  //   fetchAccountUploads().then(setAccountUploads);
-  // }, [user?.email]);
-
-  console.log("uploads: ", uploads);
   if (isLoading || uploadsIsLoading) return <div>Loading...</div>;
   if (error || uploadsError) return <div>{error?.message}</div>;
 
@@ -86,12 +67,6 @@ export default function AccountPage() {
                   <td><a href={upload.fileUrl} target="_blank" rel="noreferrer">{upload.fileUrl}</a></td>
                 </tr>
               ))}
-              {/* <tr>
-                <th>1</th>
-                <td>Cy Ganderton</td>
-                <td>Quality Control Specialist</td>
-                <td>Blue</td>
-              </tr> */}
             </tbody>
           </table>
         </div>
@@ -99,22 +74,3 @@ export default function AccountPage() {
     )
   );
 }
-
-// export async function getServerSideProps(context: any) {
-//   const user = { email: "bprost+zepzom@humrro.org" };
-//   const user = context.req.user;
-//   const res = await fetch(`${process.env.AUTH0_BASE_URL}/api/getAccountUploads`, {
-//     method: "POST",
-//     headers: {
-//       "Content-Type": "application/json",
-//     },
-//     body: JSON.stringify({ senderEmail: user?.email }),
-//     // body: JSON.stringify({ senderEmail: "bprost+zepzom@humrro.org" }),
-//   });
-//   const uploads = await res.json();
-//   return {
-//     props: {
-//       uploads,
-//     },
-//   };
-// }

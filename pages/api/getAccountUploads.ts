@@ -5,7 +5,6 @@ import { Table } from "sst/node/table";
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
     const senderEmail = req.query.senderEmail as string;
-    console.log("senderEmail", senderEmail)
     if (!senderEmail) {
         return res.status(400).json({ message: "Missing email query parameter" });
     }
