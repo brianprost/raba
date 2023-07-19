@@ -2,16 +2,7 @@ import type { NextApiRequest, NextApiResponse } from "next";
 import { DynamoDBClient } from "@aws-sdk/client-dynamodb";
 import { PutCommand } from "@aws-sdk/lib-dynamodb";
 import { Table } from "sst/node/table";
-
-type UploadDbRecord = {
-    uploadId: string;
-    senderEmail: string;
-    recipientEmail: string;
-    title: string;
-    description: string;
-    chargeCode?: string;
-    fileUrl: string;
-}
+import type { UploadDbRecord } from "../../components/types/UploadDbRecord";
 
 export default async function handler(
     req: NextApiRequest,
@@ -33,6 +24,8 @@ export default async function handler(
                 description: uploadDeets.description,
                 // chargeCode: uploadDeets.chargeCode,
                 fileUrl: uploadDeets.fileUrl,
+                createdAt: new Date().toISOString(),
+                expiresOn: new Date(new Date().getTime() + 1000 * 60 * 60 * 24 * 7).toISOString(),
             },
         }
 

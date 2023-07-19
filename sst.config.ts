@@ -24,7 +24,8 @@ export default {
           description: "string",
           chargeCode: "string",
           fileUrl: "string",
-          // createdAt: "string",
+          createdAt: "string",
+          expiresOn: "string",
         },
         primaryIndex: { partitionKey: "senderEmail", sortKey: "uploadId" },
       });
@@ -50,10 +51,10 @@ export default {
         },
       });
       new Cron(stack, "cron", {
-        schedule: "rate(1 day)",
+        schedule: "rate(1 hour)",
         job: {
           function: {
-            bind: [bucket],
+            bind: [bucket, table],
             handler: "functions/delete.handler",
           },
         },
