@@ -1,27 +1,72 @@
 import { Bucket } from "sst/node/bucket";
 import {
-    S3Client,
-    ListObjectsCommand,
-    DeleteObjectCommand,
+  S3Client,
+  DeleteObjectCommand,
 } from "@aws-sdk/client-s3";
+import { DynamoDBClient, ScanCommand } from "@aws-sdk/client-dynamodb";
+import { UpdateCommand } from "@aws-sdk/lib-dynamodb";
+import { Table } from "sst/node/table";
+import type { UploadDbRecord } from "../components/types/UploadDbRecord";
 
 export async function handler() {
-    const client = new S3Client({});
+  const db = new DynamoDBClient({ region: "us-east-1" });
+  let fileRecords: UploadDbRecord[] = [];
+  const params = {
+    TableName: Table.userUploads.tableName,
+  };
+  try {
+    const data = await db.send(new ScanCommand(params));
+    console.log("Success - scan", data);
+    fileRecords =
+      data.Items?.map((item) => {
+        // TODO i hate this 👇
+        return {
+          uploadId: item.uploadId.S!,
+          senderEmail: item.senderEmail.S!,
+          recipientEmail: item.recipientEmail.S!,
+          title: item.title.S!,
+          description: item.description.S!,
+          chargeCode: item.chargeCode?.S,
+          fileUrl: item.fileUrl.S!,
+          createdAt: item.createdAt?.S ?? "",
+          expiresOn: item.expiresOn?.S ?? "",
+        };
+      }) || [];
+  } catch (err) {
+    console.log("Error - scan", err);
+  }
 
-    const list = await client.send(
-        new ListObjectsCommand({
-            Bucket: Bucket.fileUploads.bucketName,
-        })
-    );
+  const s3 = new S3Client({});
 
-    await Promise.all(
-        (list.Contents || []).map((file) =>
-            client.send(
-                new DeleteObjectCommand({
-                    Key: file.Key,
-                    Bucket: Bucket.fileUploads.bucketName,
-                })
-            )
-        )
-    );
+  await Promise.all(
+    (fileRecords || []).map(async (record) => {
+      if (record.expiresOn > new Date().toISOString()) {
+        return;
+      }
+      s3.send(
+        new DeleteObjectCommand({
+          Key: record.uploadId,
+          Bucket: Bucket.fileUploads.bucketName,
+        }),
+      );
+      const updateDbParams = {
+        TableName: Table.userUploads.tableName,
+        Key: {
+          senderEmail: record.senderEmail,
+          uploadId: record.uploadId,
+        },
+        UpdateExpression: "set fileUrl = :fileUrl",
+        ExpressionAttributeValues: {
+          ":fileUrl": "",
+        },
+      };
+      try {
+        const command = new UpdateCommand(updateDbParams);
+        const dbRes = await db.send(command);
+        console.log("Success - update", dbRes);
+      } catch (err) {
+        console.log("Error - update", err);
+      }
+    }),
+  );
 }
