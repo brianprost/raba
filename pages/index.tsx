@@ -30,8 +30,9 @@ export default function Home({}: Props) {
         <div className="hero-content flex-col lg:flex-row-reverse">
           <div className="container mx-auto lg:mx-32 text-center">
             <div className="flex flex-col items-center gap-3">
-              <Image
-                src="/../public/raba-logo.png"
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src="raba-logo.png"
                 alt="raba-logo"
                 width={150}
                 height={150}
