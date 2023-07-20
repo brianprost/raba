@@ -45,51 +45,60 @@ export default function AccountPage() {
           </div>
         </div>
         {uploads ? (
-          <>
-            <h1 className="font-bold mt-24 text-4xl underline underline-offset-2 mb-12">
-              Your uploads:
-            </h1>
-            <div className="container mx-auto overflow-x-auto">
-              <table className="table">
-                <thead>
-                  <tr>
-                    <th>Expires On</th>
-                    <th>Upload Id</th>
-                    <th>Recipient Email</th>
-                    <th>Title</th>
-                    <th>Description</th>
-                    <th>File Url</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {uploads?.map((upload: AccountUploadsFromDb) => (
-                    <tr key={upload.uploadId}>
-                      <td>{upload.expiresOn}</td>
-                      <td>{upload.uploadId}</td>
-                      <td>{upload.recipientEmail}</td>
-                      <td>{upload.title}</td>
-                      <td>{upload.description}</td>
-                      <td>
-                        {!(upload.fileUrl == "") ? (
-                          <CopyToClipboard downloadUrl={upload.fileUrl}>
-                            <button className="btn btn-primary">
-                              Copy to clipboard
-                            </button>
-                          </CopyToClipboard>
-                        ) : (
-                          "File expired"
-                        )}
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-          </>
+          <UploadsTable uploads={uploads} />
         ) : (
           <h2 className="text-4xl font-semibold mt-20">No uploads...yet</h2>
         )}
       </div>
     )
+  );
+}
+
+export function UploadsTable({ uploads }: { uploads: AccountUploadsFromDb[] }) {
+  return (
+    <div className="container mx-auto overflow-x-auto">
+      <h1 className="text-center font-bold mt-24 text-4xl underline underline-offset-2 mb-12">
+        Your uploads:
+      </h1>
+      <table className="table">
+        <thead>
+          <tr className="text-2xl font-semibold">
+            <th>Expires In</th>
+            <th>Recipient Email</th>
+            <th>Title</th>
+            <th>Description</th>
+            <th>File Link</th>
+          </tr>
+        </thead>
+        <tbody>
+          {uploads?.map((upload: AccountUploadsFromDb) => (
+            <tr key={upload.uploadId}>
+              <td>
+                {Math.ceil(
+                  (new Date(upload.expiresOn).getTime() -
+                    new Date().getTime()) /
+                    (1000 * 60 * 60 * 24)
+                )}{" "}
+                days
+              </td>
+              <td>{upload.recipientEmail}</td>
+              <td>{upload.title}</td>
+              <td>{upload.description}</td>
+              <td>
+                {!(upload.fileUrl == "") ? (
+                  <CopyToClipboard downloadUrl={upload.fileUrl}>
+                    <button className="btn btn-primary">
+                      Copy to clipboard
+                    </button>
+                  </CopyToClipboard>
+                ) : (
+                  "File expired"
+                )}
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
   );
 }
