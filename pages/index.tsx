@@ -11,6 +11,7 @@ import type { User } from "@/components/types/User";
 import { Table } from "sst/node/table";
 // import { useSession, signIn, signOut } from "next-auth/react";
 import { DynamoDBClient, PutItemCommand } from "@aws-sdk/client-dynamodb";
+import CopyToClipboard from "@/components/CopyToClipboard";
 
 type FormData = {
   senderEmail: string;
@@ -60,10 +61,6 @@ export default function Home({ url }: { url: string }) {
     noClick: true,
     maxSize: 2 * 1024 * 1024 * 1024, // 2GB
   });
-
-  const [tooltipText, setTooltipText] = useState<string | null>(
-    "🔗 Click to copy to clipboard"
-  );
 
   const onSubmit = async (data: FormData) => {
     // TODO this is hacky
@@ -249,23 +246,11 @@ export default function Home({ url }: { url: string }) {
                   <h5 className="text-xl text-center text-humrroForestGreen underline underline-offset-4 font-bold mb-4">
                     {"Your file's link:"}
                   </h5>
-                  <div
-                    className="tooltip tooltip-bottom flex"
-                    data-tip={tooltipText}
-                    onClick={() => {
-                      navigator.clipboard.writeText(
-                        downloadUrl ?? "https://humrro.org"
-                      );
-                      setTooltipText("✅ Copied!");
-                      setTimeout(() => {
-                        setTooltipText("🔗 Click to copy to clipboard");
-                      }, 5000);
-                    }}
-                  >
+                  <CopyToClipboard downloadUrl={downloadUrl}>
                     <p className="text-center text-sm cursor-pointer flex justify-center items-center flex-col">
                       {downloadUrl ?? "https://humrro.org"}
                     </p>
-                  </div>
+                  </CopyToClipboard>
                 </div>
               )}
             </div>

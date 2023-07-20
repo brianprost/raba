@@ -1,6 +1,7 @@
 import React from "react";
 import { useUser } from "@auth0/nextjs-auth0/client";
 import useSWR from "swr";
+import CopyToClipboard from "@/components/CopyToClipboard";
 
 const fetcher = (url: string) => fetch(url).then((res) => res.json());
 
@@ -29,8 +30,6 @@ export default function AccountPage() {
 
   if (isLoading || uploadsIsLoading) return <div>Loading...</div>;
   if (error || uploadsError) return <div>{error?.message}</div>;
-
-  console.log(uploads);
 
   return (
     user && (
@@ -72,14 +71,11 @@ export default function AccountPage() {
                       <td>{upload.description}</td>
                       <td>
                         {!(upload.fileUrl == "") ? (
-                          <a
-                            href={upload.fileUrl}
-                            target="_blank"
-                            rel="noreferrer"
-                            className="btn btn-primary"
-                          >
-                            Download
-                          </a>
+                          <CopyToClipboard downloadUrl={upload.fileUrl}>
+                            <button className="btn btn-primary">
+                              Copy to clipboard
+                            </button>
+                          </CopyToClipboard>
                         ) : (
                           "File expired"
                         )}
