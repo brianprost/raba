@@ -78,7 +78,7 @@ export default function FileUploadForm({
         method: "POST",
         body: JSON.stringify(uploadDeets),
       });
-      setDownloadUrl(upload.url.split("?")[0]);
+      setDownloadUrl(`${window.location.origin}/uploads/${uploadDeets.uploadId}`);
       setToastMessageText(
         "File was uploaded successfully, but no emails were sent. Ya boi Brian needs a domain for that!"
       );

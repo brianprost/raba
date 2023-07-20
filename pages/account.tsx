@@ -76,7 +76,7 @@ export function UploadsTable({ uploads }: { uploads: AccountUploadsFromDb[] }) {
               <td>{upload.description}</td>
               <td>
                 {!(upload.fileUrl == "") ? (
-                  <CopyToClipboard downloadUrl={upload.fileUrl}>
+                  <CopyToClipboard downloadUrl={`${window.location.origin}/uploads/${upload.uploadId}`}>
                     <button className="btn btn-primary">
                       Copy to clipboard
                     </button>

@@ -1,5 +1,5 @@
 import { SSTConfig } from "sst";
-import { Cron, Config, Bucket, NextjsSite, Api, Table } from "sst/constructs";
+import { Cron, Bucket, NextjsSite, Api, Table } from "sst/constructs";
 import { config } from "dotenv";
 config();
 
@@ -28,6 +28,7 @@ export default {
           expiresOn: "string",
         },
         primaryIndex: { partitionKey: "senderEmail", sortKey: "uploadId" },
+        globalIndexes: { uploadIdIndex: { partitionKey: "uploadId" } },
       });
       const api = new Api(stack, "api", {
         defaults: {
