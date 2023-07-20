@@ -2,19 +2,9 @@ import React from "react";
 import { useUser } from "@auth0/nextjs-auth0/client";
 import useSWR from "swr";
 import CopyToClipboard from "@/components/CopyToClipboard";
+import type { AccountUploadsFromDb } from "@/components/types/AccountUploadsFromDb";
 
 const fetcher = (url: string) => fetch(url).then((res) => res.json());
-
-type AccountUploadsFromDb = {
-  uploadId: string;
-  recipientEmail: string;
-  title: string;
-  description: string;
-  chargeCode?: string;
-  fileUrl: string;
-  createdAt: string;
-  expiresOn: string;
-};
 
 export default function AccountPage() {
   const { user, error, isLoading } = useUser();
