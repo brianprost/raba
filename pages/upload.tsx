@@ -7,19 +7,9 @@ import { useForm } from "react-hook-form";
 import { DropzoneRootProps, useDropzone } from "react-dropzone";
 import Head from "next/head";
 import { useUser } from "@auth0/nextjs-auth0/client";
-import type { User } from "@/components/types/User";
-import { Table } from "sst/node/table";
-// import { useSession, signIn, signOut } from "next-auth/react";
-import { DynamoDBClient, PutItemCommand } from "@aws-sdk/client-dynamodb";
 import CopyToClipboard from "@/components/CopyToClipboard";
-
-type FormData = {
-  senderEmail: string;
-  recipientEmail: string;
-  title: string;
-  description: string;
-  chargeCode?: string;
-};
+import type { FormData } from "@/components/types/FormData";
+import FileUploadForm from "@/components/FileUploadForm";
 
 export async function getServerSideProps() {
   const command = new PutObjectCommand({
@@ -32,22 +22,12 @@ export async function getServerSideProps() {
   return { props: { url } };
 }
 
-export default function Home({ url }: { url: string }) {
+export default function UploadPage({ url }: { url: string }) {
   const { user, isLoading } = useUser();
-  // const {data:  session, status} = useSession();
+  const [showToastMessage, setShowToastMessage] = useState(false);
 
-  const emailValidation = {
-    required: !user,
-  };
   const [file, setFile] = useState<File | null>(null);
-  const [downloadUrl, setDownloadUrl] = useState<string | null>(null);
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-  } = useForm<FormData>();
   const [isDragActive, setIsDragActive] = useState(false);
-  const [isUploading, setIsUploading] = useState(false);
 
   const onDrop = useCallback((acceptedFiles: File[]) => {
     setFile(acceptedFiles[0]);
@@ -62,213 +42,53 @@ export default function Home({ url }: { url: string }) {
     maxSize: 2 * 1024 * 1024 * 1024, // 2GB
   });
 
-  const onSubmit = async (data: FormData) => {
-    // TODO this is hacky
-    user && (data.senderEmail = user.email!);
-    setIsUploading(true);
-    try {
-      if (!file) {
-        alert("Please upload a file.");
-        return;
-      }
-
-      const formData = new FormData();
-      formData.append("file", file);
-      formData.append("senderEmail", data.senderEmail);
-      formData.append("recipientEmail", data.recipientEmail);
-      formData.append("title", data.title);
-      formData.append("description", data.description);
-
-      const upload = await fetch(url, {
-        body: file,
-        method: "PUT",
-        headers: {
-          "Content-Type": file.type,
-          "Content-Disposition": `attachment; filename="${file.name}"`,
-          "Sender-Email": data.senderEmail,
-          "Recipient-Email": data.recipientEmail,
-          "File-Title": data.title,
-          "File-Description": data.description,
-        },
-      });
-
-      const uploadDeets = {
-        uploadId: upload.url.split("?")[0].split("/").pop()!,
-        senderEmail: data.senderEmail,
-        recipientEmail: data.recipientEmail,
-        title: data.title,
-        description: data.description,
-        // chargeCode: data.chargeCode,
-        fileUrl: upload.url.split("?")[0],
-      };
-      const dbWrite = await fetch("/api/recordToDb", {
-        method: "POST",
-        body: JSON.stringify(uploadDeets),
-      });
-      setDownloadUrl(upload.url.split("?")[0]);
-    } catch (error) {}
-    setIsUploading(false);
-  };
-
-  return (
-    <>
-      <Head>
-        <title>Raba - Secure File Transfer</title>
-        <meta
-          name="description"
-          content="HumRRO's secure file transfer service."
-        />
-        <meta property="og:title" content={"Raba - Secure File Transfer"} />
-        <meta property="og:image" content={"raba-logo.png"} />
-        <link rel="icon" href="/raba-logo.png" />
-      </Head>
-      <div {...getRootProps()} className="hero h-full">
-        <div className="hero-content flex-col lg:flex-row-reverse">
-          <div className="text-center lg:text-left lg:pl-10">
-            <div className="flex items-end gap-3">
-              {/* <Image src="/../public/raba-logo.png" alt="raba-logo" width={150} height={150} /> */}
-              <h1 className="text-8xl font-bold drop-shadow-md">Raba</h1>
-            </div>
-            <p className="py-6 text-xl">
-              {
-                "Meet Raba, HumRRO's new file sharing service. Raba is a secure portal for sharing files between HumRRO staff and clients. Raba is hosted on HumRRO's AWS infrastructure and is designed to be highly available and secure."
-              }
-            </p>
-          </div>
-          <div className="card flex-shrink-0 w-full max-w-sm shadow-2xl bg-base-100">
-            {isDragActive && (
-              <div className="absolute inset-0 bg-accent bg-opacity-70 flex items-center justify-center text-white text-2xl font-sans text-center p-4 rounded-lg">
-                Drop to upload...
+  if (user && !isLoading)
+    return (
+      <>
+        <Head>
+          <title>Raba - Secure File Transfer</title>
+          <meta
+            name="description"
+            content="HumRRO's secure file transfer service."
+          />
+          <meta property="og:title" content={"Raba - Secure File Transfer"} />
+          <meta property="og:image" content={"raba-logo.png"} />
+          <link rel="icon" href="/raba-logo.png" />
+        </Head>
+        <div {...getRootProps()} className="hero h-full">
+          <div className="hero-content flex-col lg:flex-row-reverse">
+            <div className="text-center lg:text-left lg:pl-10">
+              <div className="flex items-end gap-3">
+                {/* <Image src="/../public/raba-logo.png" alt="raba-logo" width={150} height={150} /> */}
+                <h1 className="text-8xl font-bold drop-shadow-md">Raba</h1>
               </div>
-            )}
-            <div className="card-body">
-              <form onSubmit={handleSubmit(onSubmit)} className="form-control">
-                <div className="p-4 border border-primary rounded-lg">
-                  <p className="my-2 text-center underline underline-offset-2">
-                    Drag and drop a file here to upload
-                  </p>
-                  <input {...getInputProps()} />
-                  {file && <p className="text-sm text-center">{file.name}</p>}
-                </div>
-                <div className="divider px-20 pt-4 pb-1" />
-                <label htmlFor="senderEmail" className="label">
-                  <span className="label-text">Your Email</span>
-                </label>
-                <input
-                  {...register("senderEmail", {
-                    required: emailValidation.required,
-                  })}
-                  className="input input-bordered"
-                  type="email"
-                  placeholder="Your Email"
-                  disabled={!!user?.email}
-                  value={user?.email ?? ""}
-                />
-                {errors.senderEmail && (
-                  <span className="text-humrroOrange">
-                    Sender email is required.
-                  </span>
-                )}
-                <label htmlFor="recipientEmail" className="label mt-2">
-                  <span className="label-text">{"Recipient's Email"}</span>
-                </label>
-                <input
-                  {...register("recipientEmail", { required: true })}
-                  className="input input-bordered"
-                  type="email"
-                  placeholder="Recipient's Email"
-                />
-                {errors.recipientEmail && (
-                  <span className="text-humrroOrange">
-                    Recipient email is required.
-                  </span>
-                )}
-
-                <label htmlFor="title" className="label mt-2">
-                  <span className="label-text">Title</span>
-                </label>
-                <input
-                  {...register("title", { required: true })}
-                  className="input input-bordered"
-                  type="text"
-                  placeholder="Title"
-                />
-                {errors.title && (
-                  <span className="text-humrroOrange">Title is required.</span>
-                )}
-                <label htmlFor="description" className="label mt-2">
-                  <span className="label-text">Description</span>
-                </label>
-
-                <textarea
-                  {...register("description", { required: true })}
-                  className="textarea textarea-bordered"
-                  placeholder="Description"
-                  rows={3}
-                />
-                {errors.description && (
-                  <span className="text-humrroOrange">
-                    Description is required.
-                  </span>
-                )}
-
-                <div className="form-control my-6">
-                  {!downloadUrl ? (
-                    <button
-                      type="submit"
-                      className="btn btn-primary"
-                      // disabled={!file}
-                    >
-                      {isUploading ? (
-                        <>
-                          <i className="loading loading-spinner" /> Uploading...
-                        </>
-                      ) : (
-                        "Upload File"
-                      )}
-                    </button>
-                  ) : (
-                    <button
-                      type="reset"
-                      className="btn btn-accent"
-                      onClick={() => {
-                        // reload the page
-                        window.location.reload();
-                      }}
-                    >
-                      Upload Another File
-                    </button>
-                  )}
-                </div>
-              </form>
-              {downloadUrl && (
-                <div className="border border-humrroForestGreen rounded-lg py-4">
-                  <h5 className="text-xl text-center text-humrroForestGreen underline underline-offset-4 font-bold mb-4">
-                    {"Your file's link:"}
-                  </h5>
-                  <CopyToClipboard downloadUrl={downloadUrl}>
-                    <p className="text-center text-sm cursor-pointer flex justify-center items-center flex-col">
-                      {downloadUrl ?? "https://humrro.org"}
-                    </p>
-                  </CopyToClipboard>
-                </div>
-              )}
+              <p className="py-6 text-xl">
+                {
+                  "Meet Raba, HumRRO's new file sharing service. Raba is a secure portal for sharing files between HumRRO staff and clients. Raba is hosted on HumRRO's AWS infrastructure and is designed to be highly available and secure."
+                }
+              </p>
             </div>
+            <FileUploadForm
+              url={url}
+              file={file}
+              isDragActive={isDragActive}
+              setShowToastMessage={setShowToastMessage}
+              getInputProps={getInputProps}
+            />
           </div>
         </div>
-      </div>
-      {downloadUrl && (
-        <div className="toast toast-bottom toast-end">
-          <div className="alert alert-success">
-            <div>
-              <span>
-                File was uploaded, but no emails were sent. Ya boi Brian needs a
-                domain for that!
-              </span>
+        {showToastMessage && (
+          <div className="toast toast-bottom toast-end">
+            <div className="alert alert-success">
+              <div>
+                <span>
+                  File was uploaded, but no emails were sent. Ya boi Brian needs
+                  a domain for that!
+                </span>
+              </div>
             </div>
           </div>
-        </div>
-      )}
-    </>
-  );
+        )}
+      </>
+    );
 }
