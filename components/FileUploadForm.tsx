@@ -1,21 +1,20 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import { useForm } from "react-hook-form";
 import type { DropzoneRootProps } from "react-dropzone";
 import { useUser } from "@auth0/nextjs-auth0/client";
 import type { FormData } from "@/components/types/FormData";
 import CopyToClipboard from "@/components/CopyToClipboard";
+import { ToastContext } from "@/pages/_app";
 
 export default function FileUploadForm({
   url,
   file,
   isDragActive,
-  setShowToastMessage,
-  getInputProps
+  getInputProps,
 }: {
   url: string;
   file: File | null;
   isDragActive: boolean;
-  setShowToastMessage: React.Dispatch<React.SetStateAction<boolean>>;
   getInputProps: () => DropzoneRootProps["getInputProps"];
 }) {
   const { user, isLoading } = useUser();
@@ -29,6 +28,12 @@ export default function FileUploadForm({
   };
   const [isUploading, setIsUploading] = useState(false);
   const [downloadUrl, setDownloadUrl] = useState<string | null>(null);
+  const {
+    showToastMessage,
+    toastMessageText,
+    setToastMessageText,
+    setShowToastMessage,
+  } = useContext(ToastContext);
 
   const onSubmit = async (data: FormData) => {
     // TODO this is hacky
@@ -74,6 +79,13 @@ export default function FileUploadForm({
         body: JSON.stringify(uploadDeets),
       });
       setDownloadUrl(upload.url.split("?")[0]);
+      setToastMessageText(
+        "File was uploaded successfully, but no emails were sent. Ya boi Brian needs a domain for that!"
+      );
+      setShowToastMessage(true);
+      setTimeout(() => {
+        setShowToastMessage(false);
+      }, 3000);
     } catch (error) {}
     setIsUploading(false);
   };

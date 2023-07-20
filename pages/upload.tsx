@@ -3,12 +3,9 @@ import { Bucket } from "sst/node/bucket";
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
 import { S3Client, PutObjectCommand } from "@aws-sdk/client-s3";
 import { useCallback, useState } from "react";
-import { useForm } from "react-hook-form";
 import { DropzoneRootProps, useDropzone } from "react-dropzone";
 import Head from "next/head";
 import { useUser } from "@auth0/nextjs-auth0/client";
-import CopyToClipboard from "@/components/CopyToClipboard";
-import type { FormData } from "@/components/types/FormData";
 import FileUploadForm from "@/components/FileUploadForm";
 
 export async function getServerSideProps() {
@@ -24,7 +21,6 @@ export async function getServerSideProps() {
 
 export default function UploadPage({ url }: { url: string }) {
   const { user, isLoading } = useUser();
-  const [showToastMessage, setShowToastMessage] = useState(false);
 
   const [file, setFile] = useState<File | null>(null);
   const [isDragActive, setIsDragActive] = useState(false);
@@ -72,23 +68,10 @@ export default function UploadPage({ url }: { url: string }) {
               url={url}
               file={file}
               isDragActive={isDragActive}
-              setShowToastMessage={setShowToastMessage}
               getInputProps={getInputProps}
             />
           </div>
         </div>
-        {showToastMessage && (
-          <div className="toast toast-bottom toast-end">
-            <div className="alert alert-success">
-              <div>
-                <span>
-                  File was uploaded, but no emails were sent. Ya boi Brian needs
-                  a domain for that!
-                </span>
-              </div>
-            </div>
-          </div>
-        )}
       </>
     );
 }
