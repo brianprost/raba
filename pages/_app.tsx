@@ -1,7 +1,7 @@
 import "@/styles/globals.css";
 import { useContext, createContext, useState } from "react";
 import type { AppProps } from "next/app";
-import { Hanken_Grotesk } from "@next/font/google";
+import { Hanken_Grotesk } from "next/font/google";
 import Navbar from "@/components/Navbar";
 // import { SessionProvider } from "next-auth/react";
 import { NavbarToggles } from "@/components/types/NavbarToggles";
