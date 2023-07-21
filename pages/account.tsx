@@ -32,10 +32,10 @@ export default function AccountPage() {
             <p>{user.email}</p>
           </div>
         </div>
-        <div>
-          <div className="tabs">
+        <div className="mt-12">
+          <div className="tabs flex justify-center">
             <a
-              className={`tab tab-lifted ${
+              className={`tab tab-lg tab-lifted ${
                 activeTab === "uploads" ? "tab-active" : ""
               }`}
               onClick={() => handleTabClick("uploads")}
@@ -43,7 +43,7 @@ export default function AccountPage() {
               My Uploads
             </a>
             <a
-              className={`tab tab-lifted ${
+              className={`tab tab-lg tab-lifted ${
                 activeTab === "shared" ? "tab-active" : ""
               }`}
               onClick={() => handleTabClick("shared")}

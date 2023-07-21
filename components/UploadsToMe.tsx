@@ -1,7 +1,7 @@
 import React from "react";
 import useSWR from "swr";
-import CopyToClipboard from "@/components/CopyToClipboard";
 import { UploadToMe } from "@/components/types/AccountUploadsFromDb";
+import Link from "next/link";
 
 const fetcher = (url: string) => fetch(url).then((res) => res.json());
 
@@ -11,8 +11,11 @@ export default function UploadsToMe({ userEmail }: { userEmail: string }) {
     error: uploadsError,
     isLoading: uploadsIsLoading,
   } = useSWR(`/api/getUploadsToMe${`?recipientEmail=${userEmail}`}`, fetcher);
+  
+  if (uploadsIsLoading) return <div>Loading...</div>;
+  if (uploadsError) return <div>{uploadsError?.message}</div>;
   return (
-    <div className="container mx-auto overflow-x-auto">
+    <>
       <h1 className="text-center font-bold mt-24 text-4xl underline underline-offset-2 mb-12">
         Shared with me:
       </h1>
@@ -42,13 +45,9 @@ export default function UploadsToMe({ userEmail }: { userEmail: string }) {
               <td>{upload.description}</td>
               <td>
                 {!(upload.fileUrl == "") ? (
-                  <CopyToClipboard
-                    downloadUrl={`${window.location.origin}/uploads/${upload.uploadId}`}
-                  >
-                    <button className="btn btn-primary">
-                      Copy to clipboard
-                    </button>
-                  </CopyToClipboard>
+                  <Link href={`/uploads/${upload.uploadId}`}>
+                    <button className="btn btn-primary">Go to download</button>
+                  </Link>
                 ) : (
                   "File expired"
                 )}
@@ -57,6 +56,6 @@ export default function UploadsToMe({ userEmail }: { userEmail: string }) {
           ))}
         </tbody>
       </table>
-    </div>
+    </>
   );
 }
