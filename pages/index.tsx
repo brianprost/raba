@@ -41,7 +41,7 @@ export default function Home({}: Props) {
             </div>
             <p className="py-6 text-2xl font-light">
               {
-                "Meet Raba, HumRRO's new file sharing service. Raba is a secure portal for sharing files between HumRRO staff and clients. Raba is hosted on HumRRO's AWS infrastructure and is designed to be highly available and secure."
+                "Meet Raba, a prototype of a new file sharing service. Raba is a secure portal for sharing files between staff and clients. Raba is hosted on your own AWS infrastructure and is designed to be highly available and secure."
               }
             </p>
             {/* eslint-disable-next-line @next/next/no-html-link-for-pages */}

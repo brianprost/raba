@@ -78,7 +78,9 @@ export default function FileUploadForm({
         method: "POST",
         body: JSON.stringify(uploadDeets),
       });
-      setDownloadUrl(`${window.location.origin}/uploads/${uploadDeets.uploadId}`);
+      setDownloadUrl(
+        `${window.location.origin}/uploads/${uploadDeets.uploadId}`
+      );
       setToastMessageText(
         "File was uploaded successfully, but no emails were sent. Ya boi Brian needs a domain for that!"
       );
@@ -191,6 +193,11 @@ export default function FileUploadForm({
                 Upload Another File
               </button>
             )}
+            <p className="text-center text-sm mt-4">
+              Note: Raba is still in beta. Please do not upload CUI/PII or any
+              critical data. All data shared is{" "}
+              <b>subject to deletion at any time without notice.</b>
+            </p>
           </div>
         </form>
         {downloadUrl && (
