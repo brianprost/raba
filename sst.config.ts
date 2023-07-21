@@ -28,7 +28,10 @@ export default {
           expiresOn: "string",
         },
         primaryIndex: { partitionKey: "senderEmail", sortKey: "uploadId" },
-        globalIndexes: { uploadIdIndex: { partitionKey: "uploadId" } },
+        globalIndexes: {
+          uploadIdIndex: { partitionKey: "uploadId" },
+          recipientEmailIndex: { partitionKey: "recipientEmail" }
+        },
       });
       const api = new Api(stack, "api", {
         defaults: {
