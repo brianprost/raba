@@ -40,8 +40,6 @@ export default {
           }
         },
         routes: {
-          // "GET /": "/functions/auth.handler",
-          // "POST /db": "/functions/db.handler",
         }
       });
       const site = new NextjsSite(stack, "ui", {
@@ -60,6 +58,7 @@ export default {
           function: {
             bind: [bucket, table],
             handler: "functions/delete.handler",
+            runtime: "nodejs18.x"
           },
         },
       });
