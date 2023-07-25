@@ -82,7 +82,7 @@ export default function FileUploadForm({
         `${window.location.origin}/uploads/${uploadDeets.uploadId}`
       );
       setToastMessageText(
-        "File was uploaded successfully, but no emails were sent. Ya boi Brian needs a domain for that!"
+        "File was uploaded successfully, but no emails were sent. Still waiting on getting a non-randomized domain!"
       );
       setShowToastMessage(true);
       setTimeout(() => {
