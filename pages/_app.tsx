@@ -47,11 +47,11 @@ export default function App({ Component, pageProps }: AppProps) {
             setShowAccountMenu,
           }}
         >
-          <main className={hanken_Grotesk.className + " bg-base-200"}>
-            <div className="h-[5vh]">
+          <main className={hanken_Grotesk.className + " bg-neutral-300"}>
+            {/* <div className="h-[5vh]">
               <Navbar />
-            </div>
-            <div className="h-[95vh]">
+            </div> */}
+            <div className="h-[100vh]">
               <GoogleAnalytics gaMeasurementId="G-G96VMLZVX9" trackPageViews />
               <Component {...pageProps} />
             </div>
