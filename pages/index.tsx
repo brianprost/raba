@@ -37,7 +37,7 @@ export default function Home({}: Props) {
               <br />
               <br />
               {
-                "Making an app like this was on my bucket list as a developer. As the sole developer of Raba, and given the lack of usage, I have made the difficult decision to sunset it and remove it from our servers so I can focus my efforts elsewhere. Raba's codebase remains open source on GitHub for anyone interested in learning or building on top of it."
+                "Making an app like this was on my bucket list as a developer. Given the lack of usage, I have made the difficult decision to sunset it and remove it from our servers so I can focus my efforts elsewhere. Raba's codebase remains open source on GitHub for anyone interested in learning or building on top of it."
               }
             </p>
             <Link href="https://github.com/brianprost/raba" target="_blank">

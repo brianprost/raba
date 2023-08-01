@@ -10,11 +10,11 @@ const hanken_Grotesk = Hanken_Grotesk({
 
 export default function App({ Component, pageProps }: AppProps) {
   return (
-          <main className={hanken_Grotesk.className + " bg-neutral-300"}>
-            <div className="h-[100vh]">
-              <GoogleAnalytics gaMeasurementId="G-G96VMLZVX9" trackPageViews />
-              <Component {...pageProps} />
-            </div>
-          </main>
+    <main className={hanken_Grotesk.className}>
+      <div className="h-[100vh]">
+        <GoogleAnalytics gaMeasurementId="G-G96VMLZVX9" trackPageViews />
+        <Component {...pageProps} />
+      </div>
+    </main>
   );
 }

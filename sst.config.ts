@@ -14,7 +14,10 @@ export default {
     app.stack(function Site({ stack }) {
       const site = new NextjsSite(stack, "ui", {
         environment: {
-          AUTH0_BASE_URL: app.stage == "prod" ? "https://d31ei8kk0mhc1.cloudfront.net" : process.env.AUTH0_BASE_URL!,
+          AUTH0_BASE_URL:
+            app.stage == "prod"
+              ? "https://d31ei8kk0mhc1.cloudfront.net"
+              : process.env.AUTH0_BASE_URL!,
         },
       });
 
