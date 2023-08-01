@@ -1,20 +1,10 @@
 import Head from "next/head";
 import React from "react";
-import Image from "next/image";
-import { useRouter } from "next/router";
-import { useUser } from "@auth0/nextjs-auth0/client";
 import Link from "next/link";
 
 type Props = {};
 
 export default function Home({}: Props) {
-  const router = useRouter();
-  const { user, error, isLoading } = useUser();
-
-  if (user && !isLoading && !error) {
-    router.push("/upload");
-  }
-
   return (
     <>
       <Head>
@@ -38,20 +28,19 @@ export default function Home({}: Props) {
                 width={150}
                 height={150}
               />
-              <h1 className="text-8xl font-bold drop-shadow-md">Raba</h1>
+              <h1 className="text-7xl font-bold drop-shadow-md">Raba</h1>
             </div>
             <p className="py-6 text-xl font-light">
               {
-                "Hi friend! Thanks for visiting Raba. This was a side project of mine that I made after noticing a need at HumRRO for sharing sensitive files between researchers and our clients. Unforunately, after 4 months of active development and sharing updates with my team, not a single person used the app. Additionally, on July 21st, the IT team enabled functionality in SharePoint workspaces that changed company policy to require HumRROvians to use such functionality for the exact use case this app was designed for."
+                "Hi friend! Thanks for visiting Raba. This was a side project of mine that I made after noticing a need at HumRRO for sharing sensitive files between researchers and clients. Unforunately, after 4 months of active development, not a single person used the app. With the recent changes enabling SharePoint workspaces for this use case, there is now an approved solution that meets IT compliance requirements."
               }
               <br />
               <br />
               {
-                "Making an app like this was on my bucket list as a developer. Given the dead end it has arrived at, all further development will be focused on personal use cases. As such, I have removed the service from HumRRO's servers. If you would like to follow or contribute to development of this app, please visit the GitHub repo below."
+                "Making an app like this was on my bucket list as a developer. As the sole developer of Raba, and given the lack of usage, I have made the difficult decision to sunset it and remove it from our servers so I can focus my efforts elsewhere. Raba's codebase remains open source on GitHub for anyone interested in learning or building on top of it."
               }
             </p>
-            {/* eslint-disable-next-line @next/next/no-html-link-for-pages */}
-            <Link href="https://github.com/brianprost/raba">
+            <Link href="https://github.com/brianprost/raba" target="_blank">
               <button className="btn btn-primary btn-md">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
