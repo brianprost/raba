@@ -32,7 +32,7 @@ export default function Home({}: Props) {
             </div>
             <p className="py-6 text-xl font-light">
               {
-                "Hi friend! Thanks for visiting Raba. This was a side project of mine that I made after noticing a need at HumRRO for sharing sensitive files between researchers and clients. Unforunately, after 4 months of active development, not a single person used the app. With the recent changes enabling SharePoint workspaces for this use case, there is now an approved solution that meets IT compliance requirements."
+                "Hi friend! Thanks for visiting Raba. This was a side project of mine that I made after noticing a need at HumRRO for sharing sensitive files between researchers and clients. Unforunately, after 4 months of active development, not a single person used the app. With the recent changes enabling workshops in SharePoint, there is now an approved solution that meets IT compliance requirements."
               }
               <br />
               <br />
