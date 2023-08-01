@@ -47,7 +47,7 @@ export default function App({ Component, pageProps }: AppProps) {
             setShowAccountMenu,
           }}
         >
-          <main className={hanken_Grotesk.className + " bg-base-200"}>
+          <main className={hanken_Grotesk.className}>
             <div className="h-[5vh]">
               <Navbar />
             </div>
