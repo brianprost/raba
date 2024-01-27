@@ -46,7 +46,7 @@ export default {
         bind: [bucket, table],
         environment: {
           AUTH0_SECRET: process.env.AUTH0_SECRET!,
-          AUTH0_BASE_URL: app.stage == "prod" ? "https://d2ko7h6cwu0oui.cloudfront.net" : process.env.AUTH0_BASE_URL!,
+          AUTH0_BASE_URL: process.env.AUTH0_BASE_URL!,
           AUTH0_ISSUER_BASE_URL: process.env.AUTH0_ISSUER_BASE_URL!,
           AUTH0_CLIENT_ID: process.env.AUTH0_CLIENT_ID!,
           AUTH0_CLIENT_SECRET: process.env.AUTH0_CLIENT_SECRET!,
@@ -67,6 +67,8 @@ export default {
         ApiEndpoint: api.url,
         SiteUrl: site.url,
       });
+
+      app.setDefaultRemovalPolicy("destroy");
     });
   },
 } satisfies SSTConfig;
