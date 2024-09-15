@@ -1,5 +1,5 @@
 import crypto from "crypto";
-import { Bucket } from "sst/node/bucket";
+import { Resource } from "sst";
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
 import { S3Client, PutObjectCommand } from "@aws-sdk/client-s3";
 import { useCallback, useState } from "react";
@@ -12,7 +12,7 @@ export async function getServerSideProps() {
   const command = new PutObjectCommand({
     ACL: "public-read",
     Key: crypto.randomUUID(),
-    Bucket: Bucket.fileUploads.bucketName,
+    Bucket: Resource.FileUploads.name,
   });
   const url = await getSignedUrl(new S3Client({}), command);
 

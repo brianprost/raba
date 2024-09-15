@@ -1,18 +1,14 @@
-import { Bucket } from "sst/node/bucket";
-import {
-  S3Client,
-  DeleteObjectCommand,
-} from "@aws-sdk/client-s3";
+import { S3Client, DeleteObjectCommand } from "@aws-sdk/client-s3";
 import { DynamoDBClient, ScanCommand } from "@aws-sdk/client-dynamodb";
 import { UpdateCommand } from "@aws-sdk/lib-dynamodb";
-import { Table } from "sst/node/table";
+import { Resource } from "sst";
 import type { UploadDbRecord } from "../components/types/UploadDbRecord";
 
 export async function handler() {
   const db = new DynamoDBClient({ region: "us-east-1" });
   let fileRecords: UploadDbRecord[] = [];
   const params = {
-    TableName: Table.userUploads.tableName,
+    TableName: Resource.UserUploads.name,
   };
   try {
     const data = await db.send(new ScanCommand(params));
@@ -46,11 +42,11 @@ export async function handler() {
       s3.send(
         new DeleteObjectCommand({
           Key: record.uploadId,
-          Bucket: Bucket.fileUploads.bucketName,
+          Bucket: Resource.FileUploads.name,
         }),
       );
       const updateDbParams = {
-        TableName: Table.userUploads.tableName,
+        TableName: Resource.UserUploads.name,
         Key: {
           senderEmail: record.senderEmail,
           uploadId: record.uploadId,
