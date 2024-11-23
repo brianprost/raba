@@ -33,7 +33,7 @@ export default $config({
     const deleteCronJob = new sst.aws.Cron("RabaDeleteCronJob", {
       job: {
         handler: "functions/delete.handler",
-        runtime: "nodejs18.x",
+        runtime: "nodejs20.x",
         link: [fileUploadsBucket, userUploadsTable],
       },
       schedule: "rate(1 hour)",
