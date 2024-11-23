@@ -1,11 +1,11 @@
 /// <reference path="./.sst/platform/config.d.ts" />
-
 export default $config({
   app(input) {
     return {
       name: "raba",
       removal: input?.stage === "prod" ? "retain" : "remove",
       home: "aws",
+      providers: { cloudflare: "5.43.1" },
     };
   },
   async run() {
@@ -38,17 +38,21 @@ export default $config({
       },
       schedule: "rate(1 hour)",
     });
-
     const auth0Secret = new sst.Secret("Auth0Secret");
     const auth0BaseUrl = new sst.Secret("Auth0BaseUrl");
     const auth0IssuerBaseUrl = new sst.Secret("Auth0IssuerBaseUrl");
     const auth0ClientId = new sst.Secret("Auth0ClientId");
     const auth0ClientSecret = new sst.Secret("Auth0ClientSecret");
-
     new sst.aws.Nextjs("WebUi", {
+      domain: {
+        name: `${$app.stage !== "prod" ? `${$app.stage}-` : ""}${
+          $app.name
+        }.brianprost.com`,
+        dns: sst.cloudflare.dns(),
+      },
       link: [fileUploadsBucket, userUploadsTable],
       environment: {
-        // todo: change these to just use the values in the runtime from secrets manager
+        // todo: change these to just use the values in the runtime from secrets manager: https://sst.dev/docs/environment-variables/
         AUTH0_SECRET: auth0Secret.value,
         AUTH0_BASE_URL: auth0BaseUrl.value,
         AUTH0_ISSUER_BASE_URL: auth0IssuerBaseUrl.value,
